@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring: 
+  application:
+    name: help-desk
+  jackson:
+    time-zone: America/Sao_Paulo
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${HD_PG_DATABASE}
+    username: ${HD_PG_USERNAME}
+    password: ${HD_PG_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
