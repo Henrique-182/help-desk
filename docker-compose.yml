@@ -1,0 +1,17 @@
+services:
+  help-desk:
+    image: henrick182/hd
+    restart: always
+    build: 
+      context: .
+      dockerfile: hd/Dockerfile
+    environment:
+      TZ: America/Sao_Paulo
+    ports:
+      - 8080:8080
+    networks:
+      - hd-network
+      
+networks:
+  hd-network:
+    driver: bridge
