@@ -1,3 +1,9 @@
+auth:
+  jwt:
+    token:
+      secret-key: ${HD_JWT_SECRET_KEY}
+      expire-length: 3600000
+
 server:
   port: 8080
 

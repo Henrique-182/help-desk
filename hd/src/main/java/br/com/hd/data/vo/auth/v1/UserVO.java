@@ -1,9 +1,14 @@
 package br.com.hd.data.vo.auth.v1;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
-public class UserVO implements Serializable {
+import org.springframework.hateoas.RepresentationModel;
+
+import br.com.hd.model.auth.v1.Permission;
+
+public class UserVO extends RepresentationModel<UserVO> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -14,6 +19,7 @@ public class UserVO implements Serializable {
 	private Boolean accountNonLocked;
 	private Boolean credentialsNonExpired;
 	private Boolean enabled;
+	private List<Permission> permissions;
 	
 	public UserVO() {}
 
@@ -73,17 +79,28 @@ public class UserVO implements Serializable {
 		this.enabled = enabled;
 	}
 
+	public List<Permission> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(List<Permission> permissions) {
+		this.permissions = permissions;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, fullname, key,
-				username);
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(accountNonExpired, accountNonLocked, credentialsNonExpired, enabled,
+				fullname, key, permissions, username);
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -92,7 +109,8 @@ public class UserVO implements Serializable {
 				&& Objects.equals(accountNonLocked, other.accountNonLocked)
 				&& Objects.equals(credentialsNonExpired, other.credentialsNonExpired)
 				&& Objects.equals(enabled, other.enabled) && Objects.equals(fullname, other.fullname)
-				&& Objects.equals(key, other.key) && Objects.equals(username, other.username);
+				&& Objects.equals(key, other.key) && Objects.equals(permissions, other.permissions)
+				&& Objects.equals(username, other.username);
 	}
-	
+
 }
