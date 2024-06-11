@@ -1,0 +1,14 @@
+services:
+  postgres-db:
+    image: postgres:16
+    restart: always
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    environment:
+      TZ: America/Sao_Paulo
+      POSTGRES_USER: ${{ secrets.PG_USERNAME }}
+      POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
+      POSTGRES_DB: ${{ secrets.PG_BD_NAME }}
+      PGPORT: 5432
