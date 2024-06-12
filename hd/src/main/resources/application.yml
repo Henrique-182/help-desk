@@ -7,9 +7,9 @@ spring:
   jackson:
     time-zone: America/Sao_Paulo
   datasource:
-    url: jdbc:postgresql://localhost:5432/${HD_PG_DATABASE}
-    username: ${HD_PG_USERNAME}
-    password: ${HD_PG_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/hd
+    username: postgres
+    password: 12345678
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
