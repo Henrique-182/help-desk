@@ -27,6 +27,9 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
+    - name: Docker Compose Postgres DB Run
+      working-directory: ./docker/bd
+      run: docker compose up -d
       
     - name: Set up JDK 21
       uses: actions/setup-java@v3
@@ -39,7 +42,7 @@ jobs:
       working-directory: ./hd
       run: mvn clean package
 
-    - name: Docker Compose Build
+    - name: Docker Compose Application Build
       working-directory: ./
       run: docker compose build
 
