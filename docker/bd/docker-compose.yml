@@ -8,7 +8,7 @@ services:
       - 5432
     environment:
       TZ: America/Sao_Paulo
-      POSTGRES_USER: ${{ secrets.PG_USERNAME }}
-      POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
-      POSTGRES_DB: ${{ secrets.PG_BD_NAME }}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: hd
       PGPORT: 5432
