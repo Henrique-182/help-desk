@@ -83,7 +83,7 @@ public class UserService implements UserDetailsService {
 		user.setFullname(data.getFullname());
 		
 		String password = createHash(data.getPassword());
-		if (password.startsWith("Bearer ")) password = password.substring("Bearer ".length());
+		if (password.startsWith("{pbkdf2}")) password = password.substring("{pbkdf2}".length());
 		user.setPassword(password);
 		
 		user.setAccountNonExpired(true);

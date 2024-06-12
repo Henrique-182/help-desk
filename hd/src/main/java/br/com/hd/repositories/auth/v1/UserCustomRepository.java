@@ -25,13 +25,13 @@ public class UserCustomRepository {
 		String queryString = "SELECT USER FROM User USER ";
 		String condition = "WHERE ";
 		
-		if (name != null) {
-			queryString += condition + "(USER.username ILIKE %" + name + "% OR USER.fullname ILIKE %" + name + "%) ";
+		if (!name.isBlank()) {
+			queryString += condition + "(USER.username ILIKE '%" + name + "%' OR USER.fullname ILIKE '%" + name + "%') ";
 			condition = "AND ";
 		}
 		
-		if (permission != null) {
-			queryString += condition + "ELEMENT(USER.permissions).description ILIKE %" + permission + "% ";
+		if (!permission.isBlank()) {
+			queryString += condition + "ELEMENT(USER.permissions).description ILIKE '%" + permission + "%' ";
 			condition = "AND ";
 		}
 		
@@ -39,7 +39,7 @@ public class UserCustomRepository {
 		String queryStringCount = RepositoryUtil.replaceToCount(queryString, "USER");
 		
 		var queryPageable = manager.createQuery(queryStringPageable, User.class);
-		var queryCount = manager.createQuery(queryStringCount, User.class);
+		var queryCount = manager.createQuery(queryStringCount, Long.class);
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("resultList", queryPageable.getResultList());

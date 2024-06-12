@@ -3,12 +3,21 @@ package br.com.hd.data.vo.auth.v1;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class AccountCredentialsVO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	@NotNull(message = "Username can't be null!")
+	@NotBlank(message = "Username can't be blank!")
 	private String username;
+	
 	private String fullname;
+	
+	@NotNull(message = "Password can't be null!")
+	@NotBlank(message = "Password can't be blank!")
 	private String password;
 	
 	public AccountCredentialsVO() {}

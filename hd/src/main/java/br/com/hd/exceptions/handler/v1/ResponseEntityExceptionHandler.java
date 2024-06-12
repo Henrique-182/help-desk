@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,20 @@ public class ResponseEntityExceptionHandler {
 	@ExceptionHandler(RequiredObjectIsNullException.class)
 	public final ResponseEntity<ExceptionResponse> handleBadRequestExceptions(Exception exception, WebRequest webRequest) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public final ResponseEntity<ExceptionResponse> handleValidationExceptions(Exception exception, WebRequest webRequest) {
+		
+		int firstIndex = exception.getMessage().lastIndexOf("default message [") + "default message [".length();
+		int lastIndex = exception.getMessage().lastIndexOf("]") - 1;
+		
+		// default field [Field can't be null!]] -> Field can't be null!
+		String exceptionMessage = exception.getMessage().substring(firstIndex, lastIndex);
+		
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), exceptionMessage, webRequest.getDescription(false));
+		
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
 	

@@ -18,7 +18,7 @@ public class RepositoryUtil {
 		int size = pageable.getPageSize();
 		long offset = pageable.getOffset();
 		
-		query += "ORDER BY " + alias + "." + order + " " + order.getDirection() + " ";
+		query += "ORDER BY " + alias + "." + order.getProperty() + " " + order.getDirection() + " ";
 		query += "LIMIT " + size + " ";
 		query += "OFFSET " + offset; 
 		
