@@ -1,0 +1,23 @@
+auth:
+  jwt:
+    token:
+      secret-key: ${HD_JWT_SECRET_KEY}
+      expire-length: 3600000
+
+server:
+  port: 8888
+
+spring: 
+  application:
+    name: help-desk
+  jackson:
+    time-zone: America/Sao_Paulo
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hd
+    username: postgres
+    password: 12345678
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false

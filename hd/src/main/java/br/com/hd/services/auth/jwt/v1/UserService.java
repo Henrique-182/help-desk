@@ -1,5 +1,8 @@
 package br.com.hd.services.auth.jwt.v1;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +23,7 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm;
 import org.springframework.stereotype.Service;
 
+import br.com.hd.controllers.auth.v1.UserController;
 import br.com.hd.data.vo.auth.v1.AccountCredentialsVO;
 import br.com.hd.data.vo.auth.v1.UserVO;
 import br.com.hd.exceptions.generic.v1.RequiredObjectIsNullException;
@@ -59,6 +63,7 @@ public class UserService implements UserDetailsService {
 		Map<String, Object> resultMap = customRepository.findCustomPageable(params, pageable);
 		
 		List<UserVO> voList =  mapper.toVOList((List<User>) resultMap.get("resultList"));
+		voList.stream().map(u -> addLinkSelfRel(u));
 		
 		return assembler.toModel(
 				new PageImpl<>(
@@ -72,7 +77,7 @@ public class UserService implements UserDetailsService {
 	public UserVO findById(Integer id) {
 		User persistedEntity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for the id (" + id + ")!"));
 		
-		return mapper.toVO(persistedEntity);
+		return addLinkVOList(mapper.toVO(persistedEntity));
 	}
 	
 	public UserVO create(AccountCredentialsVO data) {
@@ -97,7 +102,7 @@ public class UserService implements UserDetailsService {
 		
 		User createdUser = repository.save(user);
 		
-		return mapper.toVO(createdUser);
+		return addLinkVOList(mapper.toVO(createdUser));
 	}
 	
 	public UserVO updateById(Integer id, UserVO data) {
@@ -113,7 +118,7 @@ public class UserService implements UserDetailsService {
 		
 		User updatedEntity = repository.save(entity);
 		
-		return mapper.toVO(updatedEntity);
+		return addLinkVOList(mapper.toVO(updatedEntity));
 	}
 	
 	public void deleteById(Integer id) {
@@ -121,6 +126,14 @@ public class UserService implements UserDetailsService {
 		User entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for the id (" + id + ") !"));
 		
 		repository.delete(entity);
+	}
+	
+	private static UserVO addLinkSelfRel(UserVO vo) {
+		return vo.add(linkTo(methodOn(UserController.class).findById(vo.getKey())).withSelfRel());
+	}
+	
+	private UserVO addLinkVOList(UserVO vo) {
+		return vo.add(linkTo(methodOn(UserController.class).findCustomPageable(0, 10, "username", "asc", null, null)).withRel("userVOList").expand());
 	}
 
 	private static String createHash(String password) {

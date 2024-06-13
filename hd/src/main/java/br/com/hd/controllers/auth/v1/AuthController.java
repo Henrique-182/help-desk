@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.hd.data.vo.auth.v1.AccountCredentialsVO;
+import br.com.hd.data.vo.auth.v1.TokenVO;
 import br.com.hd.services.auth.jwt.v1.AuthService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -28,11 +29,11 @@ public class AuthController {
 	@PostMapping(path = "/signin")
 	public ResponseEntity signin(@Valid @RequestBody AccountCredentialsVO data) {
 
-		ResponseEntity token = service.signin(data);
+		TokenVO token = service.signin(data);
 		
 		if (token == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid Client Request. Token is Null!");
 		
-		return token;
+		return ResponseEntity.ok(token);
 	}
 	
 	@PutMapping(path = "/refresh/{username}")
@@ -41,11 +42,11 @@ public class AuthController {
 		@RequestHeader("Authorization") @Valid @NotBlank String refreshToken
 	) {
 		
-		ResponseEntity<?> token = service.refresh(username, refreshToken);
+		TokenVO token = service.refresh(username, refreshToken);
 		
 		if (token == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
 		
-		return token;
+		return ResponseEntity.ok(token);
 	}
 	
 }
