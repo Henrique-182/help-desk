@@ -3,7 +3,6 @@ package br.com.hd.repositories.auth.v1;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -14,9 +13,12 @@ import jakarta.persistence.EntityManager;
 @Repository
 public class UserCustomRepository {
 
-	@Autowired
 	private EntityManager manager;
 	
+	public UserCustomRepository(EntityManager manager) {
+		this.manager = manager;
+	}
+
 	public Map<String, Object> findCustomPageable(Map<String, Object> queryParams, Pageable pageable) {
 		
 		String name = (String) queryParams.get("name");
