@@ -62,8 +62,11 @@ public class UserService implements UserDetailsService {
 		
 		Map<String, Object> resultMap = customRepository.findCustomPageable(params, pageable);
 		
-		List<UserVO> voList =  mapper.toVOList((List<User>) resultMap.get("resultList"));
-		voList.stream().map(u -> addLinkSelfRel(u));
+		List<UserVO> voList =  mapper
+				.toVOList((List<User>) resultMap.get("resultList"))
+				.stream()
+				.map(user -> addLinkSelfRel(user))
+				.toList();
 		
 		return assembler.toModel(
 				new PageImpl<>(
