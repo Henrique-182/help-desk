@@ -1,7 +1,7 @@
 auth:
   jwt:
     token:
-      secret-key: ${HD_JWT_SECRET_KEY}
+      secret-key: 17cdl5
       expire-length: 3600000
 
 server:
@@ -21,3 +21,11 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: false
+    
+springdoc:
+  api-docs:
+    path: /api-docs
+  paths-to-match:
+    - /v1/**
+  swagger-ui: 
+    use-root-path: true
