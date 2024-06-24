@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import br.com.hd.model.knowledge.v1.Tag;
 
 @Repository
-public interface TagRepository extends JpaRepository<Tag, Integer>, PagingAndSortingRepository<Tag, Integer> {
+public interface TagRepository extends JpaRepository<Tag, Long>, PagingAndSortingRepository<Tag, Long> {
 
 	Page<Tag> findPageableByDescriptionContainingIgnoreCase(@Param("description") String description, Pageable pageable);
 	

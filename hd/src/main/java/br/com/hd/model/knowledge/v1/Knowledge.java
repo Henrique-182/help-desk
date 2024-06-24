@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,7 +32,7 @@ public class Knowledge implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name = "FK_SOFTWARE")
-	private Software software;
+	private SoftwareKnwl software;
 	
 	@Column(name = "CONTENT", nullable = false)
 	private String content;
@@ -65,11 +64,11 @@ public class Knowledge implements Serializable {
 		this.title = title;
 	}
 
-	public Software getSoftware() {
+	public SoftwareKnwl getSoftware() {
 		return software;
 	}
 
-	public void setSoftware(Software software) {
+	public void setSoftware(SoftwareKnwl software) {
 		this.software = software;
 	}
 

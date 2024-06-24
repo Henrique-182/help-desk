@@ -19,18 +19,18 @@ public class Tag implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", nullable = false, unique = true)
-	private Integer id;
+	private Long id;
 	
 	@Column(name = "DESCRIPTION", nullable = false, unique = true, length = 50)
 	private String description;
 
 	public Tag() {}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

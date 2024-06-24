@@ -11,20 +11,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(schema = "KNOWLEDGE", name = "TB_TAG")
-public class TagKnwl implements Serializable {
+@Table(schema = "KNOWLEDGE", name = "TB_SOFTWARE")
+public class SoftwareKnwl implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ID", nullable = false, unique = true)
 	private Long id;
 	
-	@Column(name = "DESCRIPTION", nullable = false, unique = true, length = 50)
+	@Column(name = "DESCRIPTION", nullable = false, unique = true)
 	private String description;
 
-	public TagKnwl() {}
+	public SoftwareKnwl() {}
 
 	public Long getId() {
 		return id;
@@ -55,7 +55,7 @@ public class TagKnwl implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TagKnwl other = (TagKnwl) obj;
+		SoftwareKnwl other = (SoftwareKnwl) obj;
 		return Objects.equals(description, other.description) && Objects.equals(id, other.id);
 	}
 	

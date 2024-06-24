@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import br.com.hd.model.knowledge.v1.Software;
 
 @Repository
-public interface SoftwareRepository extends JpaRepository<Software, Integer>, PagingAndSortingRepository<Software, Integer> {
+public interface SoftwareRepository extends JpaRepository<Software, Long>, PagingAndSortingRepository<Software, Long> {
 
 	Page<Software> findPageableByDescriptionContainingIgnoreCase(@Param("description") String description, Pageable pageable);
 	
