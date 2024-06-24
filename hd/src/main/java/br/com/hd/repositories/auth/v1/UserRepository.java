@@ -5,7 +5,7 @@ import org.springframework.data.repository.query.Param;
 
 import br.com.hd.model.auth.v1.User;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
 	User findByUsername(@Param("username") String username);
 	

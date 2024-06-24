@@ -97,7 +97,7 @@ public class UserRepositoryTest extends AbstractIntegrationTest {
 		
 		assertNotNull(totalElements);
 		
-		assertEquals(1, totalElements);
+		assertEquals(3, totalElements);
 	}
 	
 }

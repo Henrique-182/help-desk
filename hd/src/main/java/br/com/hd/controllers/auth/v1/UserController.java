@@ -95,7 +95,7 @@ public class UserController {
 		}
 	)
 	@GetMapping(path = "/{id}")
-	public UserVO findById(@PathVariable("id") Integer id) {
+	public UserVO findById(@PathVariable("id") Long id) {
 		
 		return service.findById(id);
 	}
@@ -132,7 +132,7 @@ public class UserController {
 		}
 	)
 	@PutMapping(path = "/{id}")
-	public UserVO updateById(@PathVariable("id") Integer id, @RequestBody UserVO data) {
+	public UserVO updateById(@PathVariable("id") Long id, @RequestBody UserVO data) {
 		
 		return service.updateById(id, data);
 	}
@@ -151,7 +151,7 @@ public class UserController {
 		}
 	)
 	@DeleteMapping(path = "/{id}")
-	public ResponseEntity<?> deleteById(@PathVariable("id") Integer id) {
+	public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
 		
 		service.deleteById(id);
 		

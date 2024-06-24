@@ -26,7 +26,7 @@ public class Knowledge implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", nullable = false, unique = true)
-	private Integer id;
+	private Long id;
 	
 	@Column(name = "TITLE", nullable = false, unique = true)
 	private String title;
@@ -38,10 +38,10 @@ public class Knowledge implements Serializable {
 	@Column(name = "CONTENT", nullable = false)
 	private String content;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(	
 		schema = "KNOWLEDGE",
-		name = "TB_KNOWLEDGE_TOPIC",
+		name = "TB_KNOWLEDGE_TAG",
 		joinColumns = @JoinColumn(name = "FK_KNOWLEDGE"),
 		inverseJoinColumns = @JoinColumn(name = "FK_TAG")
 	)
@@ -49,11 +49,11 @@ public class Knowledge implements Serializable {
 
 	public Knowledge() {}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

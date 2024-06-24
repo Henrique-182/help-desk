@@ -77,7 +77,7 @@ public class UserService implements UserDetailsService {
 				);
 	}
 	
-	public UserVO findById(Integer id) {
+	public UserVO findById(Long id) {
 		User persistedEntity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for the id (" + id + ")!"));
 		
 		return addLinkVOList(mapper.toVO(persistedEntity));
@@ -108,7 +108,7 @@ public class UserService implements UserDetailsService {
 		return addLinkVOList(mapper.toVO(createdUser));
 	}
 	
-	public UserVO updateById(Integer id, UserVO data) {
+	public UserVO updateById(Long id, UserVO data) {
 		if (data == null) throw new RequiredObjectIsNullException();
 		
 		User entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for the id (" + id + ") !"));
@@ -124,7 +124,7 @@ public class UserService implements UserDetailsService {
 		return addLinkVOList(mapper.toVO(updatedEntity));
 	}
 	
-	public void deleteById(Integer id) {
+	public void deleteById(Long id) {
 		
 		User entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for the id (" + id + ") !"));
 		

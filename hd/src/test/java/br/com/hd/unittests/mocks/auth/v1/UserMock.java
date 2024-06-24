@@ -9,17 +9,17 @@ import br.com.hd.model.auth.v1.User;
 public class UserMock {
 	
 	public static User entity() {
-		return entity(0);
+		return entity(0L);
 	}
 	
 	public static UserVO vo() {
-		return vo(0);
+		return vo(0L);
 	}
 	
 	public static List<User> entityList() {
 		List<User> users = new ArrayList<>();
 		
-		for (int i = 0; i < 13; i++) users.add(entity(i));
+		for (long i = 0; i < 13; i++) users.add(entity(i));
 		
 		return users;
 	}
@@ -27,12 +27,12 @@ public class UserMock {
 	public static List<UserVO> voList() {
 		List<UserVO> users = new ArrayList<>();
 		
-		for (int i = 0; i < 13; i++) users.add(vo(i));
+		for (long i = 0; i < 13; i++) users.add(vo(i));
 		
 		return users;
 	}
 	
-	public static User entity(Integer number) {
+	public static User entity(Long number) {
 		User u = new User();
 		u.setId(number);
 		u.setUsername("Username" + number);
@@ -47,7 +47,7 @@ public class UserMock {
 		return u;
 	}
 	
-	public static UserVO vo(Integer number) {
+	public static UserVO vo(Long number) {
 		UserVO u = new UserVO();
 		u.setKey(number);
 		u.setUsername("Username" + number);

@@ -12,7 +12,7 @@ public class UserVO extends RepresentationModel<UserVO> implements Serializable 
 
 	private static final long serialVersionUID = 1L;
 	
-	private Integer key;
+	private Long key;
 	private String username;
 	private String fullname;
 	private Boolean accountNonExpired;
@@ -23,11 +23,11 @@ public class UserVO extends RepresentationModel<UserVO> implements Serializable 
 	
 	public UserVO() {}
 
-	public Integer getKey() {
+	public Long getKey() {
 		return key;
 	}
 
-	public void setKey(Integer key) {
+	public void setKey(Long key) {
 		this.key = key;
 	}
 
