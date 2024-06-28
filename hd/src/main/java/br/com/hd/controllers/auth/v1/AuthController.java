@@ -14,10 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.hd.data.vo.auth.v1.AccountCredentialsVO;
 import br.com.hd.data.vo.auth.v1.TokenVO;
 import br.com.hd.services.auth.jwt.v1.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+@Tag(name = "Auth", description = "Endpoints for Managing Auth")
 @RestController
 @RequestMapping(path = "/v1/auth")
 public class AuthController {
@@ -25,6 +31,16 @@ public class AuthController {
 	@Autowired
 	private AuthService service;
 	
+	@Operation(
+		summary = "Authenticates a User",
+		description = "Authenticates a User and returns a token",
+		tags = "Auth",
+		responses = {
+			@ApiResponse(description = "Success", responseCode = "200", content = @Content(schema = @Schema(implementation = TokenVO.class))),
+			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+			@ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
+		}
+	)
 	@SuppressWarnings("rawtypes")
 	@PostMapping(path = "/signin")
 	public ResponseEntity signin(@Valid @RequestBody AccountCredentialsVO data) {
@@ -36,6 +52,16 @@ public class AuthController {
 		return ResponseEntity.ok(token);
 	}
 	
+	@Operation(
+		summary = "Refresh Token",
+		description = "Refresh Token for Authenticated User and Returns a Token",
+		tags = "Auth",
+		responses = {
+			@ApiResponse(description = "Success", responseCode = "200", content = @Content(schema = @Schema(implementation = TokenVO.class))),
+			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+			@ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
+		}
+	)
 	@PutMapping(path = "/refresh/{username}")
 	public ResponseEntity<?> refresh(
 		@NotNull @NotBlank @PathVariable("username") String username, 

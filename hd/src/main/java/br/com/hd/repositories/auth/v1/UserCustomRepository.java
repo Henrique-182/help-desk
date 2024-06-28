@@ -1,6 +1,6 @@
 package br.com.hd.repositories.auth.v1;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
@@ -12,6 +12,9 @@ import jakarta.persistence.EntityManager;
 
 @Repository
 public class UserCustomRepository {
+	
+	private static final String ENTITY_NAME = "User";
+	private static final String ALIAS = "USER";
 
 	private EntityManager manager;
 	
@@ -24,30 +27,43 @@ public class UserCustomRepository {
 		String name = (String) queryParams.get("name");
 		String permission = (String) queryParams.get("permission");
 		
-		String queryString = "SELECT USER FROM User USER ";
+		String query = "FROM User USER ";
 		String condition = "WHERE ";
 		
 		if (!name.isBlank()) {
-			queryString += condition + "(USER.username ILIKE '%" + name + "%' OR USER.fullname ILIKE '%" + name + "%') ";
+			query += condition + "(USER.username ILIKE '%" + name + "%' OR USER.fullname ILIKE '%" + name + "%') ";
 			condition = "AND ";
 		}
 		
 		if (!permission.isBlank()) {
-			queryString += condition + "ELEMENT(USER.permissions).description ILIKE '%" + permission + "%' ";
+			query += condition + "ELEMENT(USER.permissions).description ILIKE '%" + permission + "%' ";
 			condition = "AND ";
 		}
 		
-		String queryStringPageable = RepositoryUtil.addPageable(queryString, pageable, "USER");
-		String queryStringCount = RepositoryUtil.replaceToCount(queryString, "USER");
+		String queryParamList = 
+				RepositoryUtil.addSelectDistinct(ALIAS, pageable)
+				+ query
+				+ RepositoryUtil.addPageable(ALIAS, pageable);
 		
-		var queryPageable = manager.createQuery(queryStringPageable, User.class);
-		var queryCount = manager.createQuery(queryStringCount, Long.class);
+		String queryResultList = RepositoryUtil.createQueryList(ENTITY_NAME, ALIAS, pageable);
 		
-		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("resultList", queryPageable.getResultList());
-		resultMap.put("totalElements", queryCount.getSingleResult());
+		String queryTotalElements = 
+				RepositoryUtil.addCount(ALIAS)
+				+ query;
 		
-		return resultMap;
+		List<Object> paramList = manager.createQuery(queryParamList, Object.class).getResultList();
+		
+		return Map.of(
+				"resultList",
+				manager	
+					.createQuery(queryResultList, User.class)
+					.setParameter("paramList", paramList)
+					.getResultList(),
+				"totalElements",
+				manager
+					.createQuery(queryTotalElements, Long.class)
+					.getSingleResult()
+			);
 	}
 	
 }

@@ -7,20 +7,42 @@ import org.springframework.stereotype.Service;
 @Service
 public class RepositoryUtil {
 	
-	public static String replaceToCount(String query, String alias) {
+	public static boolean isParamValid(String param) {
 		
-		return query.replace("SELECT " + alias, "SELECT COUNT(" + alias + ")");
+		return !(param == null || param.isBlank() || param.isEmpty());
 	}
-
-	public static String addPageable(String query, Pageable pageable, String alias) {
+	
+	public static String createQueryList(String entityName, String alias, Pageable pageable) {
 		
 		Order order = pageable.getSort().get().toList().get(0);
-		int size = pageable.getPageSize();
-		long offset = pageable.getOffset();
+		
+		return "SELECT " + alias 
+			+ " FROM " + entityName + " " + alias 
+			+ " WHERE " + alias + "." + order.getProperty() +  " IN :paramList "
+			+ " ORDER BY " + alias + "." + order.getProperty() + " " + order.getDirection();
+	}
+	
+	public static String addCount(String alias) {
+		
+		return "SELECT COUNT(DISTINCT " + alias + ") ";
+	}
+	
+	public static String addSelectDistinct(String alias, Pageable pageable) {
+		
+		String sortBy = pageable.getSort().get().toList().get(0).getProperty();
+		
+		return "SELECT DISTINCT " + alias + "." + sortBy + " ";
+	}
+
+	public static String addPageable(String alias, Pageable pageable) {
+		
+		String query = "";
+		
+		Order order = pageable.getSort().get().toList().get(0);
 		
 		query += "ORDER BY " + alias + "." + order.getProperty() + " " + order.getDirection() + " ";
-		query += "LIMIT " + size + " ";
-		query += "OFFSET " + offset; 
+		query += "LIMIT " + pageable.getPageSize() + " ";
+		query += "OFFSET " + pageable.getOffset(); 
 		
 		return query;
 	}

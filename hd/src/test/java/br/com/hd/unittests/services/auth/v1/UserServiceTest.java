@@ -67,7 +67,7 @@ public class UserServiceTest {
 	
 	@Test
 	void testFindById() {
-		Integer id = 0;
+		Long id = 0L;
 		User mockEntity = UserMock.entity();
 		UserVO mockVO = UserMock.vo();
 		
@@ -89,7 +89,7 @@ public class UserServiceTest {
 	
 	@Test
 	void testFindByIdWithResourceNotFoundException() {
-		Integer id = 10;
+		Long id = 10L;
 		
 		Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
 			service.findById(id);
@@ -137,7 +137,7 @@ public class UserServiceTest {
 	
 	@Test
 	void testUpdateById() {
-		Integer id = 0;
+		Long id = 0L;
 		User mockEntity = UserMock.entity();
 		User persistedEntity = mockEntity;
 		UserVO mockVO = UserMock.vo();
@@ -161,7 +161,7 @@ public class UserServiceTest {
 	
 	@Test
 	void testUpdateByIdWithResourceNotFoundException() {
-		Integer id = null;
+		Long id = null;
 		UserVO mockVO = UserMock.vo();
 		
 		Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
@@ -176,7 +176,7 @@ public class UserServiceTest {
 	
 	@Test
 	void testUpdateByIdWithRequiredObjectIsNullException() {
-		Integer id = 1;
+		Long id = 1L;
 		UserVO mockVO = null;
 		
 		Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
@@ -191,7 +191,7 @@ public class UserServiceTest {
 	
 	@Test
 	void deleteById() {
-		Integer id = 0;
+		Long id = 0L;
 		User mockEntity = UserMock.entity();
 		
 		when(repository.findById(id)).thenReturn(Optional.of(mockEntity));
@@ -201,7 +201,7 @@ public class UserServiceTest {
 	
 	@Test
 	void testDeleteByIdWithResourceNotFoundException() {
-		Integer id = 10;
+		Long id = 10L;
 		
 		Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
 			service.deleteById(id);

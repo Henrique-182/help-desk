@@ -109,7 +109,7 @@ public class UserControllerTest extends AbstractIntegrationTest {
 		UserVO createdUser = mapper.readValue(content, UserVO.class);
 		user = createdUser;
 		
-		assertEquals(2, createdUser.getKey());
+		assertEquals(4, createdUser.getKey());
 		assertEquals("Username0", createdUser.getUsername());
 		assertEquals("Fullname0", createdUser.getFullname());
 		assertTrue(createdUser.getAccountNonExpired());
@@ -162,7 +162,7 @@ public class UserControllerTest extends AbstractIntegrationTest {
 		
 		UserVO persistedUser = mapper.readValue(content, UserVO.class);
 		
-		assertEquals(2, persistedUser.getKey());
+		assertEquals(4, persistedUser.getKey());
 		assertEquals("Username0", persistedUser.getUsername());
 		assertEquals("Fullname0", persistedUser.getFullname());
 		assertTrue(persistedUser.getAccountNonExpired());
@@ -178,7 +178,7 @@ public class UserControllerTest extends AbstractIntegrationTest {
 	void testUpdateById() throws JsonMappingException, JsonProcessingException {
 		
 		List<Permission> permissionList = new ArrayList<>();
-		permissionList.add(new Permission(2));
+		permissionList.add(new Permission(1));
 		user.setPermissions(permissionList);
 		
 		var content = given().spec(specification)
@@ -195,14 +195,14 @@ public class UserControllerTest extends AbstractIntegrationTest {
 		UserVO updatedUser = mapper.readValue(content, UserVO.class);
 		user = updatedUser;
 		
-		assertEquals(2, updatedUser.getKey());
+		assertEquals(4, updatedUser.getKey());
 		assertEquals("Username0", updatedUser.getUsername());
 		assertEquals("Fullname0", updatedUser.getFullname());
 		assertTrue(updatedUser.getAccountNonExpired());
 		assertTrue(updatedUser.getAccountNonLocked());
 		assertTrue(updatedUser.getCredentialsNonExpired());
 		assertTrue(updatedUser.getEnabled());
-		assertEquals(2, updatedUser.getPermissions().get(0).getId());
+		assertEquals(1, updatedUser.getPermissions().get(0).getId());
 		assertTrue(content.contains("\"userVOList\":{\"href\":\"http://localhost:8888/v1/user?pageNumber=0&pageSize=10&sortBy=username&direction=asc\"}"));
 	}
 	
@@ -210,9 +210,17 @@ public class UserControllerTest extends AbstractIntegrationTest {
 	@Order(5)
 	void testFindCustomPageable() throws JsonMappingException, JsonProcessingException {
 		
-		String permission = "MANAGER";
+		Integer pageNumber = 0;
+		Integer pageSize = 10;
+		String sortBy = "id";
+		String direction = "asc";
+		String permission = "ADM";
 		
 		var content = given().spec(specification)
+				.queryParam("pageNumber", pageNumber)
+				.queryParam("pageSize", pageSize)
+				.queryParam("sortBy", sortBy)
+				.queryParam("direction", direction)
 				.queryParam("permission", permission)
 				.when()
 					.get()
@@ -239,14 +247,14 @@ public class UserControllerTest extends AbstractIntegrationTest {
 		
 		UserVO userTwo = resultList.get(1);
 		
-		assertEquals(2, userTwo.getKey());
+		assertEquals(4, userTwo.getKey());
 		assertEquals("Username0", userTwo.getUsername());
 		assertEquals("Fullname0", userTwo.getFullname());
 		assertTrue(userTwo.getAccountNonExpired());
 		assertTrue(userTwo.getAccountNonLocked());
 		assertTrue(userTwo.getCredentialsNonExpired());
 		assertTrue(userTwo.getEnabled());
-		assertEquals(2, userTwo.getPermissions().get(0).getId());
+		assertEquals(1, userTwo.getPermissions().get(0).getId());
 	}
 	
 	@Test
@@ -266,7 +274,7 @@ public class UserControllerTest extends AbstractIntegrationTest {
 		assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/v1/user/2\"}"));
 		
 		assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/v1/user?page=0&size=10&sort=username,asc\"}"));
-		assertTrue(content.contains("\"page\":{\"size\":10,\"totalElements\":2,\"totalPages\":1,\"number\":0}"));
+		assertTrue(content.contains("\"page\":{\"size\":10,\"totalElements\":4,\"totalPages\":1,\"number\":0}"));
 	}
 	
 	@Test
