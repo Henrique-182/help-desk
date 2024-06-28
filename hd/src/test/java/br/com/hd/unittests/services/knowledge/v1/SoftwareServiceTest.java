@@ -3,6 +3,7 @@ package br.com.hd.unittests.services.knowledge.v1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -56,7 +57,7 @@ public class SoftwareServiceTest {
 		
 		assertEquals(1, persistedSoftware.getKey());
 		assertEquals("Name1", persistedSoftware.getDescription());
-		//assertTrue(persistedSoftware.getLinks().toString().contains("</v1/software?page=0&size=10&sortBy=name&direction=asc>;rel=\"softwareVOList\""));
+		assertTrue(persistedSoftware.getLinks().toString().contains("</v1/software?pageNumber=0&pageSize=10&sortBy=name&direction=asc>;rel=\"softwareVOList\""));
 	}
 	
 	@Test
@@ -90,7 +91,7 @@ public class SoftwareServiceTest {
 		
 		assertEquals(0, createdSoftware.getKey());
 		assertEquals("Name0", createdSoftware.getDescription());
-		//assertTrue(createdSoftware.getLinks().toString().contains("</v1/software?page=0&size=10&sortBy=name&direction=asc>;rel=\"softwareVOList\""));
+		assertTrue(createdSoftware.getLinks().toString().contains("</v1/software?pageNumber=0&pageSize=10&sortBy=name&direction=asc>;rel=\"softwareVOList\""));
 	}
 	
 	@Test
@@ -124,7 +125,7 @@ public class SoftwareServiceTest {
 		
 		assertEquals(1, updatedSoftware.getKey());
 		assertEquals("Name1", updatedSoftware.getDescription());
-		//assertTrue(updatedSoftware.getLinks().toString().contains("</v1/software?page=0&size=10&sortBy=name&direction=asc>;rel=\"softwareVOList\""));
+		assertTrue(updatedSoftware.getLinks().toString().contains("</v1/software?pageNumber=0&pageSize=10&sortBy=name&direction=asc>;rel=\"softwareVOList\""));
 	}
 	
 	@Test

@@ -47,7 +47,6 @@ public class KnowledgeMock {
 		KnowledgeVO vo = new KnowledgeVO();
 		vo.setKey(number);
 		vo.setTitle("Title" + number);
-		vo.setDescription("Description" + number);
 		vo.setContent("Content" + number);
 		vo.setSoftware(SoftwareKnwlMock.entity(number));
 		vo.setTags(TagKnwlMock.entityList());

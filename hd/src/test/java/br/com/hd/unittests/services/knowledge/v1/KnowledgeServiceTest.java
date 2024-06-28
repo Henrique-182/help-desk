@@ -3,6 +3,7 @@ package br.com.hd.unittests.services.knowledge.v1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -58,7 +59,6 @@ public class KnowledgeServiceTest {
 		
 		assertEquals(1L, persistedKnowledge.getKey());
 		assertEquals("Title1", persistedKnowledge.getTitle());
-		assertEquals("Description1", persistedKnowledge.getDescription());
 		assertEquals("Content1", persistedKnowledge.getContent());
 		
 		assertEquals("Software B", persistedKnowledge.getSoftware().getDescription());
@@ -66,7 +66,7 @@ public class KnowledgeServiceTest {
 		assertEquals("Name0", persistedKnowledge.getTags().get(0).getDescription());
 		assertEquals("Name1", persistedKnowledge.getTags().get(1).getDescription());
 		
-		//assertTrue(persistedKnowledge.getLinks().toString().contains("</v1/knowledge?page=0&size=10&sortBy=title&direction=asc>;rel=\"knowledgeVOList\""));
+		assertTrue(persistedKnowledge.getLinks().toString().contains("</v1/knowledge?pageNumber=0&pageSize=10&sortBy=title&direction=asc>;rel=\"knowledgeVOList\""));
 	}
 	
 	@Test
@@ -100,7 +100,6 @@ public class KnowledgeServiceTest {
 		
 		assertEquals(0L, createdKnowledge.getKey());
 		assertEquals("Title0", createdKnowledge.getTitle());
-		assertEquals("Description0", createdKnowledge.getDescription());
 		assertEquals("Content0", createdKnowledge.getContent());
 		
 		assertEquals("Software A", createdKnowledge.getSoftware().getDescription());
@@ -108,7 +107,7 @@ public class KnowledgeServiceTest {
 		assertEquals("Name0", createdKnowledge.getTags().get(0).getDescription());
 		assertEquals("Name1", createdKnowledge.getTags().get(1).getDescription());
 		
-		//assertTrue(createdKnowledge.getLinks().toString().contains("</v1/knowledge?page=0&size=10&sortBy=title&direction=asc>;rel=\"knowledgeVOList\""));
+		assertTrue(createdKnowledge.getLinks().toString().contains("</v1/knowledge?pageNumber=0&pageSize=10&sortBy=title&direction=asc>;rel=\"knowledgeVOList\""));
 	}
 	
 	@Test
@@ -131,7 +130,6 @@ public class KnowledgeServiceTest {
 		Knowledge persistedEntity = mockEntity;
 		KnowledgeVO mockVO = KnowledgeMock.vo(id);
 		mockVO.setTitle(id + "Title");
-		mockVO.setDescription(id + "Description");
 		mockVO.setContent(id + "Content");
 		
 		when(repository.findById(id)).thenReturn(Optional.of(mockEntity));
@@ -144,7 +142,6 @@ public class KnowledgeServiceTest {
 		
 		assertEquals(2, updatedKnowledge.getKey());
 		assertEquals("2Title", updatedKnowledge.getTitle());
-		assertEquals("2Description", updatedKnowledge.getDescription());
 		assertEquals("2Content", updatedKnowledge.getContent());
 		
 		assertEquals("Software A", updatedKnowledge.getSoftware().getDescription());
@@ -152,7 +149,7 @@ public class KnowledgeServiceTest {
 		assertEquals("Name0", updatedKnowledge.getTags().get(0).getDescription());
 		assertEquals("Name1", updatedKnowledge.getTags().get(1).getDescription());
 		
-		//assertTrue(updatedKnowledge.getLinks().toString().contains("</v1/knowledge?page=0&size=10&sortBy=title&direction=asc>;rel=\"knowledgeVOList\""));
+		assertTrue(updatedKnowledge.getLinks().toString().contains("</v1/knowledge?pageNumber=0&pageSize=10&sortBy=title&direction=asc>;rel=\"knowledgeVOList\""));
 	}
 	
 	@Test

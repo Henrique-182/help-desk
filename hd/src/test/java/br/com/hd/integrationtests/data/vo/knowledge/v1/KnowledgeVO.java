@@ -1,15 +1,13 @@
-package br.com.hd.data.vo.knowledge.v1;
+package br.com.hd.integrationtests.data.vo.knowledge.v1;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.hateoas.RepresentationModel;
-
 import br.com.hd.model.knowledge.v1.SoftwareKnwl;
 import br.com.hd.model.knowledge.v1.TagKnwl;
 
-public class KnowledgeVO extends RepresentationModel<KnowledgeVO> implements Serializable {
+public class KnowledgeVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -63,17 +61,14 @@ public class KnowledgeVO extends RepresentationModel<KnowledgeVO> implements Ser
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(content, key, software, tags, title);
-		return result;
+		return Objects.hash(content, key, software, tags, title);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
+		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;

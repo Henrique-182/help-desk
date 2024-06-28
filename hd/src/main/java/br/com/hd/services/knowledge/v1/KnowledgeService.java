@@ -1,5 +1,8 @@
 package br.com.hd.services.knowledge.v1;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +14,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
+import br.com.hd.controllers.knowledge.v1.KnowledgeController;
 import br.com.hd.data.vo.knowledge.v1.KnowledgeVO;
 import br.com.hd.exceptions.generic.v1.RequiredObjectIsNullException;
 import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
@@ -38,7 +42,11 @@ public class KnowledgeService {
 	public PagedModel<EntityModel<KnowledgeVO>> findCustomPageable(Map<String, Object> queryParams, Pageable pageable) {
 		Map<String, Object> resultMap = customRepository.findCustomPageable(queryParams, pageable);
 		
-		List<KnowledgeVO> voList = mapper.toVOList((List<Knowledge>) resultMap.get("resultList"));
+		List<KnowledgeVO> voList = mapper
+				.toVOList((List<Knowledge>) resultMap.get("resultList"))
+				.stream()
+				.map(k -> addLinkSelfRel(k))
+				.toList();
 		
 		return assembler.toModel(
 				new PageImpl<>(
@@ -52,7 +60,7 @@ public class KnowledgeService {
 	public KnowledgeVO findById(Long id) {
 		Knowledge persistedEntity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found for the id (" + id + ") !"));
 		
-		return mapper.toVO(persistedEntity);
+		return addLinkVOList(mapper.toVO(persistedEntity));
 	}
 	
 	public KnowledgeVO create(KnowledgeVO data) {
@@ -60,7 +68,7 @@ public class KnowledgeService {
 		
 		Knowledge createdEntity = repository.save(mapper.toEntity(data));
 		
-		return mapper.toVO(createdEntity);
+		return addLinkVOList(mapper.toVO(createdEntity));
 	}
 	
 	public KnowledgeVO updateById(Long id, KnowledgeVO data) {
@@ -74,7 +82,7 @@ public class KnowledgeService {
 		
 		Knowledge updatedEntity = repository.save(entity);
 		
-		return mapper.toVO(updatedEntity);
+		return addLinkVOList(mapper.toVO(updatedEntity));
 	}
 	
 	public void deleteById(Long id) {
@@ -82,5 +90,14 @@ public class KnowledgeService {
 		
 		repository.delete(entity);
 	}
+	
+	private KnowledgeVO addLinkSelfRel(KnowledgeVO vo) {
+		return vo.add(linkTo(methodOn(KnowledgeController.class).findById(vo.getKey())).withSelfRel());
+	}
+	
+	private KnowledgeVO addLinkVOList(KnowledgeVO vo) {
+		return vo.add(linkTo(methodOn(KnowledgeController.class).findCustomPageable(0, 10, "title", "asc", null, null, null, null)).withRel("knowledgeVOList").expand());
+	}
+	
 	
 }

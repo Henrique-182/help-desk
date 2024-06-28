@@ -6,7 +6,7 @@ public class SoftwareKnwlMock {
 	
 	public static SoftwareKnwl entity(Long number) {
 		SoftwareKnwl entity = new SoftwareKnwl();
-		entity.setId(number);
+		entity.setId(number % 2 == 0 ? 1L : 2L);
 		entity.setDescription(number % 2 == 0 ? "Software A" : "Software B");
 		
 		return entity;
