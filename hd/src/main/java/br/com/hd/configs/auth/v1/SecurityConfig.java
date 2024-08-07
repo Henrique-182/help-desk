@@ -65,7 +65,10 @@ public class SecurityConfig {
 							"/v1/auth/signin",
 							"/v1/auth/refresh/**",
 							"/swagger-ui/**",
-							"/api-docs/**"
+							"/api-docs/**",
+							"/ws/**",
+							"/chat/**",
+							"/app/**"
 						).permitAll()
 						.requestMatchers(
 							"/v1/**"

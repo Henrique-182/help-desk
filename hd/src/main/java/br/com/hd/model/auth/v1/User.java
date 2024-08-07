@@ -40,6 +40,9 @@ public class User implements Serializable, UserDetails {
 	@Column(name = "PASSWORD", nullable = false)
 	private String password;
 	
+	@Column(name = "USER_TYPE", nullable = false)
+	private UserType type;
+	
 	@Column(name = "ACCOUNT_NON_EXPIRED", nullable = false)
 	private Boolean accountNonExpired;
 	
@@ -121,6 +124,14 @@ public class User implements Serializable, UserDetails {
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
 	}
+	
+	public UserType getType() {
+		return type;
+	}
+
+	public void setType(UserType type) {
+		this.type = type;
+	}
 
 	public Boolean getAccountNonExpired() {
 		return accountNonExpired;
@@ -173,7 +184,7 @@ public class User implements Serializable, UserDetails {
 	@Override
 	public int hashCode() {
 		return Objects.hash(accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, fullname, id, password,
-				permissions, username);
+				permissions, type, username);
 	}
 
 	@Override
@@ -190,7 +201,8 @@ public class User implements Serializable, UserDetails {
 				&& Objects.equals(credentialsNonExpired, other.credentialsNonExpired)
 				&& Objects.equals(enabled, other.enabled) && Objects.equals(fullname, other.fullname)
 				&& Objects.equals(id, other.id) && Objects.equals(password, other.password)
-				&& Objects.equals(permissions, other.permissions) && Objects.equals(username, other.username);
+				&& Objects.equals(permissions, other.permissions) && type == other.type
+				&& Objects.equals(username, other.username);
 	}
-	
+
 }

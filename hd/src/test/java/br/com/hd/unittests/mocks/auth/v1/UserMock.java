@@ -5,6 +5,7 @@ import java.util.List;
 
 import br.com.hd.data.vo.auth.v1.UserVO;
 import br.com.hd.model.auth.v1.User;
+import br.com.hd.model.auth.v1.UserType;
 
 public class UserMock {
 	
@@ -38,6 +39,7 @@ public class UserMock {
 		u.setUsername("Username" + number);
 		u.setFullname("Fullname" + number);
 		u.setPassword("Password" + number);
+		u.setType(number % 2 == 0 ? UserType.Employee : UserType.Customer);
 		u.setAccountNonExpired(number % 2 == 0);
 		u.setAccountNonLocked(number % 2 == 0);
 		u.setCredentialsNonExpired(number % 2 == 0);
@@ -52,6 +54,7 @@ public class UserMock {
 		u.setKey(number);
 		u.setUsername("Username" + number);
 		u.setFullname("Fullname" + number);
+		u.setType(number % 2 == 0 ? UserType.Employee : UserType.Customer);
 		u.setAccountNonExpired(number % 2 == 0);
 		u.setAccountNonLocked(number % 2 == 0);
 		u.setCredentialsNonExpired(number % 2 == 0);

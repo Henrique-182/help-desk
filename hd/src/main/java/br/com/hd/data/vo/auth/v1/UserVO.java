@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.springframework.hateoas.RepresentationModel;
 
 import br.com.hd.model.auth.v1.Permission;
+import br.com.hd.model.auth.v1.UserType;
 
 public class UserVO extends RepresentationModel<UserVO> implements Serializable {
 
@@ -15,6 +16,7 @@ public class UserVO extends RepresentationModel<UserVO> implements Serializable 
 	private Long key;
 	private String username;
 	private String fullname;
+	private UserType type;
 	private Boolean accountNonExpired;
 	private Boolean accountNonLocked;
 	private Boolean credentialsNonExpired;
@@ -45,6 +47,14 @@ public class UserVO extends RepresentationModel<UserVO> implements Serializable 
 
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
+	}
+	
+	public UserType getType() {
+		return type;
+	}
+
+	public void setType(UserType type) {
+		this.type = type;
 	}
 
 	public Boolean getAccountNonExpired() {
@@ -92,7 +102,7 @@ public class UserVO extends RepresentationModel<UserVO> implements Serializable 
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + Objects.hash(accountNonExpired, accountNonLocked, credentialsNonExpired, enabled,
-				fullname, key, permissions, username);
+				fullname, key, permissions, type, username);
 		return result;
 	}
 
@@ -110,7 +120,7 @@ public class UserVO extends RepresentationModel<UserVO> implements Serializable 
 				&& Objects.equals(credentialsNonExpired, other.credentialsNonExpired)
 				&& Objects.equals(enabled, other.enabled) && Objects.equals(fullname, other.fullname)
 				&& Objects.equals(key, other.key) && Objects.equals(permissions, other.permissions)
-				&& Objects.equals(username, other.username);
+				&& type == other.type && Objects.equals(username, other.username);
 	}
 
 }
