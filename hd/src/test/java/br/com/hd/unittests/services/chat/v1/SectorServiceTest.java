@@ -26,6 +26,7 @@ import br.com.hd.exceptions.generic.v1.RequiredObjectIsNullException;
 import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
 import br.com.hd.mappers.chat.v1.SectorMapper;
 import br.com.hd.model.auth.v1.User;
+import br.com.hd.model.auth.v1.UserType;
 import br.com.hd.model.chat.v1.Sector;
 import br.com.hd.repositories.chat.v1.SectorRepository;
 import br.com.hd.services.chat.v1.SectorService;
@@ -61,9 +62,10 @@ public class SectorServiceTest {
 		
 		assertNotNull(persistedSector);
 		
-		assertNotNull(persistedSector);
 		assertEquals(1, persistedSector.getKey());
 		assertEquals("Description1", persistedSector.getDescription());
+		assertEquals(UserType.Customer, persistedSector.getCustomers().get(0).getType());
+		assertEquals(UserType.Employee, persistedSector.getEmployees().get(0).getType());
 		
 		assertTrue(persistedSector.getLinks().toString().contains("</v1/sector?pageNumber=0&pageSize=10&sortBy=description&direction=asc>;rel=\"sectorVOList\""));
 	}
@@ -155,9 +157,10 @@ public class SectorServiceTest {
 		
 		assertNotNull(createdSector);
 		
-		assertNotNull(createdSector);
 		assertEquals(0, createdSector.getKey());
 		assertEquals("Description0", createdSector.getDescription());
+		assertEquals(UserType.Customer, createdSector.getCustomers().get(0).getType());
+		assertEquals(UserType.Employee, createdSector.getEmployees().get(0).getType());
 		
 		assertTrue(createdSector.getLinks().toString().contains("</v1/sector?pageNumber=0&pageSize=10&sortBy=description&direction=asc>;rel=\"sectorVOList\""));
 	}
@@ -191,9 +194,10 @@ public class SectorServiceTest {
 		
 		assertNotNull(updatedSector);
 		
-		assertNotNull(updatedSector);
 		assertEquals(2, updatedSector.getKey());
 		assertEquals("2Description", updatedSector.getDescription());
+		assertEquals(UserType.Customer, updatedSector.getCustomers().get(0).getType());
+		assertEquals(UserType.Employee, updatedSector.getEmployees().get(0).getType());
 		
 		assertTrue(updatedSector.getLinks().toString().contains("</v1/sector?pageNumber=0&pageSize=10&sortBy=description&direction=asc>;rel=\"sectorVOList\""));
 	}

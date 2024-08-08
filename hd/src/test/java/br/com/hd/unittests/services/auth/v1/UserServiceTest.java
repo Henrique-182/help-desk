@@ -20,14 +20,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import br.com.hd.data.vo.auth.v1.AccountCredentialsVO;
+import br.com.hd.data.vo.auth.v1.CreateUserVO;
 import br.com.hd.data.vo.auth.v1.UserVO;
 import br.com.hd.exceptions.generic.v1.RequiredObjectIsNullException;
 import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
 import br.com.hd.mappers.auth.v1.UserMapper;
 import br.com.hd.model.auth.v1.User;
+import br.com.hd.model.auth.v1.UserType;
 import br.com.hd.repositories.auth.v1.UserRepository;
 import br.com.hd.services.auth.jwt.v1.UserService;
+import br.com.hd.unittests.mocks.auth.v1.CreateUserMock;
 import br.com.hd.unittests.mocks.auth.v1.PermissionMock;
 import br.com.hd.unittests.mocks.auth.v1.UserMock;
 
@@ -103,7 +105,7 @@ public class UserServiceTest {
 	
 	@Test
 	void testCreate() {
-		AccountCredentialsVO data = new AccountCredentialsVO("username0", "fullname0", "password0");
+		CreateUserVO data = CreateUserMock.vo();
 		User mockEntity = UserMock.entity();
 		UserVO mockVO = UserMock.vo();
 		
@@ -115,6 +117,7 @@ public class UserServiceTest {
 		assertEquals(0, createdUser.getKey());
 		assertEquals("Username0", createdUser.getUsername());
 		assertEquals("Fullname0", createdUser.getFullname());
+		assertEquals(UserType.Employee, createdUser.getType());
 		assertEquals(true, createdUser.getAccountNonExpired());
 		assertEquals(true, createdUser.getAccountNonLocked());
 		assertEquals(true, createdUser.getCredentialsNonExpired());

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.hd.data.vo.auth.v1.AccountCredentialsVO;
+import br.com.hd.data.vo.auth.v1.CreateUserVO;
 import br.com.hd.data.vo.auth.v1.UserVO;
 import br.com.hd.services.auth.jwt.v1.UserService;
 import br.com.hd.util.controller.v1.ControllerUtil;
@@ -113,7 +113,7 @@ public class UserController {
 		}
 	)
 	@PostMapping
-	public UserVO create(@Valid @RequestBody AccountCredentialsVO data) {
+	public UserVO create(@Valid @RequestBody CreateUserVO data) {
 		
 		return service.create(data);
 	}

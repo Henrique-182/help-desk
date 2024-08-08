@@ -24,7 +24,7 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder.Secret
 import org.springframework.stereotype.Service;
 
 import br.com.hd.controllers.auth.v1.UserController;
-import br.com.hd.data.vo.auth.v1.AccountCredentialsVO;
+import br.com.hd.data.vo.auth.v1.CreateUserVO;
 import br.com.hd.data.vo.auth.v1.UserVO;
 import br.com.hd.exceptions.generic.v1.RequiredObjectIsNullException;
 import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
@@ -83,12 +83,13 @@ public class UserService implements UserDetailsService {
 		return addLinkVOList(mapper.toVO(persistedEntity));
 	}
 	
-	public UserVO create(AccountCredentialsVO data) {
+	public UserVO create(CreateUserVO data) {
 		if (data == null) throw new RequiredObjectIsNullException();
 		
 		User user = new User();
 		user.setUsername(data.getUsername());
 		user.setFullname(data.getFullname());
+		user.setType(data.getType());
 		
 		String password = createHash(data.getPassword());
 		if (password.startsWith("{pbkdf2}")) password = password.substring("{pbkdf2}".length());

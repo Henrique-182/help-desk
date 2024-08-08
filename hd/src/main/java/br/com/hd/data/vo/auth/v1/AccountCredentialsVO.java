@@ -14,17 +14,14 @@ public class AccountCredentialsVO implements Serializable {
 	@NotBlank(message = "Username can't be blank!")
 	private String username;
 	
-	private String fullname;
-	
 	@NotNull(message = "Password can't be null!")
 	@NotBlank(message = "Password can't be blank!")
 	private String password;
 	
 	public AccountCredentialsVO() {}
 	
-	public AccountCredentialsVO(String username, String fullname, String password) {
+	public AccountCredentialsVO(String username, String password) {
 		this.username = username;
-		this.fullname = fullname;
 		this.password = password;
 	}
 
@@ -34,14 +31,6 @@ public class AccountCredentialsVO implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getFullname() {
-		return fullname;
-	}
-
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
 	}
 
 	public String getPassword() {
@@ -54,7 +43,7 @@ public class AccountCredentialsVO implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fullname, password, username);
+		return Objects.hash(password, username);
 	}
 
 	@Override
@@ -66,8 +55,7 @@ public class AccountCredentialsVO implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		AccountCredentialsVO other = (AccountCredentialsVO) obj;
-		return Objects.equals(fullname, other.fullname) && Objects.equals(password, other.password)
-				&& Objects.equals(username, other.username);
+		return Objects.equals(password, other.password) && Objects.equals(username, other.username);
 	}
-	
+
 }

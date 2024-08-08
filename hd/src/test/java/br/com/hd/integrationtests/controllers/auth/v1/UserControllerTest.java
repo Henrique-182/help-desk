@@ -24,9 +24,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.hd.configs.v1.TestConfigs;
 import br.com.hd.data.vo.auth.v1.TokenVO;
 import br.com.hd.integrationtests.data.vo.auth.v1.AccountCredentialsVO;
+import br.com.hd.integrationtests.data.vo.auth.v1.CreateUserVO;
 import br.com.hd.integrationtests.data.vo.auth.v1.UserVO;
 import br.com.hd.integrationtests.data.vo.auth.v1.WrapperUserVO;
 import br.com.hd.integrationtests.mocks.auth.v1.AccountCredentialsMock;
+import br.com.hd.integrationtests.mocks.auth.v1.CreateUserMock;
 import br.com.hd.integrationtests.testcontainers.v1.AbstractIntegrationTest;
 import br.com.hd.model.auth.v1.Permission;
 import io.restassured.builder.RequestSpecBuilder;
@@ -94,10 +96,10 @@ public class UserControllerTest extends AbstractIntegrationTest {
 	@Order(1)
 	void testCreate() throws JsonMappingException, JsonProcessingException {
 		
-		newCredentials = AccountCredentialsMock.vo();
+		CreateUserVO data = CreateUserMock.vo();
 		
 		var content = given().spec(specification)
-				.body(newCredentials)
+				.body(data)
 				.when()
 					.post()
 				.then()
@@ -123,6 +125,8 @@ public class UserControllerTest extends AbstractIntegrationTest {
 	@Test
 	@Order(2)
 	void testGetTokenFromCreatedUser() {
+		
+		newCredentials = AccountCredentialsMock.vo();
 		
 		TokenVO tokenVO = given()
 				.basePath("/v1/auth/signin")

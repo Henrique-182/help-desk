@@ -1,10 +1,9 @@
-package br.com.hd.unittests.mocks.chat.v1;
+package br.com.hd.integrationtests.mocks.chat.v1;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.hd.data.vo.chat.v1.SectorVO;
-import br.com.hd.data.vo.chat.v1.SimpleSectorVO;
+import br.com.hd.integrationtests.data.vo.chat.v1.SectorVO;
 import br.com.hd.model.chat.v1.Sector;
 
 public class SectorMock {
@@ -15,10 +14,6 @@ public class SectorMock {
 	
 	public static SectorVO vo() {
 		return vo(0L);
-	}
-	
-	public static SimpleSectorVO simpleVo() {
-		return simpleVo(0L);
 	}
 	
 	public static List<Sector> entityList() {
@@ -37,20 +32,12 @@ public class SectorMock {
 		return list;
 	}
 	
-	public static List<SimpleSectorVO> simpleVoList() {
-		List<SimpleSectorVO> list = new ArrayList<>();
-		
-		for (long i = 0; i < 14; i++) list.add(simpleVo(i));
-		
-		return list;
-	}
-	
 	public static Sector entity(Long number) {
 		Sector entity = new Sector();
 		entity.setId(number);
 		entity.setDescription("Description" + number);
-		entity.setEmployees(List.of(UserSctrMock.entity()));
-		entity.setCustomers(List.of(UserSctrMock.entity(1L)));
+		entity.setEmployees(List.of(UserSctrMock.entity(1L)));
+		entity.setCustomers(List.of(UserSctrMock.entity(3L)));
 		
 		return entity;
 	}
@@ -59,18 +46,10 @@ public class SectorMock {
 		SectorVO vo = new SectorVO();
 		vo.setKey(number);
 		vo.setDescription("Description" + number);
-		vo.setEmployees(List.of(UserSctrMock.entity()));
-		vo.setCustomers(List.of(UserSctrMock.entity(1L)));
+		vo.setEmployees(List.of(UserSctrMock.entity(1L)));
+		vo.setCustomers(List.of(UserSctrMock.entity(3L)));
 		
 		return vo;
 	}
 	
-	public static SimpleSectorVO simpleVo(Long number) {
-		SimpleSectorVO vo = new SimpleSectorVO();
-		vo.setKey(number);
-		vo.setDescription("Description" + number);
-		
-		return vo;
-	}
-
 }
