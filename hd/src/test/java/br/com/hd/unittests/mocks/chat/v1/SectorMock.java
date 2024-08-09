@@ -5,7 +5,7 @@ import java.util.List;
 
 import br.com.hd.data.vo.chat.v1.SectorVO;
 import br.com.hd.data.vo.chat.v1.SimpleSectorVO;
-import br.com.hd.model.chat.v1.Sector;
+import br.com.hd.model.chat.sector.v1.Sector;
 
 public class SectorMock {
 	

@@ -1,4 +1,4 @@
-package br.com.hd.model.chat.v1;
+package br.com.hd.model.chat.sector.v1;
 
 import java.io.Serializable;
 import java.util.List;

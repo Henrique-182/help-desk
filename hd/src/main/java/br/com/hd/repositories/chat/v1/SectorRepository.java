@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import br.com.hd.model.chat.v1.Sector;
+import br.com.hd.model.chat.sector.v1.Sector;
 
 @Repository
 public interface SectorRepository extends JpaRepository<Sector, Long> {

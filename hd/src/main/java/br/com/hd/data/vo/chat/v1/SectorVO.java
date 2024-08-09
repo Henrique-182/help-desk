@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import org.springframework.hateoas.RepresentationModel;
 
-import br.com.hd.model.chat.v1.UserSctr;
+import br.com.hd.model.chat.sector.v1.UserSctr;
 
 public class SectorVO extends RepresentationModel<SectorVO> implements Serializable {
 

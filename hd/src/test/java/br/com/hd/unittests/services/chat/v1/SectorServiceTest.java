@@ -27,7 +27,7 @@ import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
 import br.com.hd.mappers.chat.v1.SectorMapper;
 import br.com.hd.model.auth.v1.User;
 import br.com.hd.model.auth.v1.UserType;
-import br.com.hd.model.chat.v1.Sector;
+import br.com.hd.model.chat.sector.v1.Sector;
 import br.com.hd.repositories.chat.v1.SectorRepository;
 import br.com.hd.services.chat.v1.SectorService;
 import br.com.hd.unittests.mocks.auth.v1.UserMock;

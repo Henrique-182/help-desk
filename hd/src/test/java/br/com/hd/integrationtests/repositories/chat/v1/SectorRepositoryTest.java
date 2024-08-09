@@ -23,7 +23,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.hd.integrationtests.testcontainers.v1.AbstractIntegrationTest;
-import br.com.hd.model.chat.v1.Sector;
+import br.com.hd.model.chat.sector.v1.Sector;
 import br.com.hd.repositories.chat.v1.SectorCustomRepository;
 import br.com.hd.repositories.chat.v1.SectorRepository;
 import jakarta.persistence.EntityManager;

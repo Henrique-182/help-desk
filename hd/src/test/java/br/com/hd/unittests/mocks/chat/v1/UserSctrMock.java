@@ -1,7 +1,7 @@
 package br.com.hd.unittests.mocks.chat.v1;
 
 import br.com.hd.model.auth.v1.UserType;
-import br.com.hd.model.chat.v1.UserSctr;
+import br.com.hd.model.chat.sector.v1.UserSctr;
 
 public class UserSctrMock {
 	

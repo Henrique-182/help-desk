@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-import br.com.hd.model.chat.v1.UserSctr;
+import br.com.hd.model.chat.sector.v1.UserSctr;
 
 public class SectorVO implements Serializable {
 

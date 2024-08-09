@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import br.com.hd.model.chat.v1.Sector;
+import br.com.hd.model.chat.sector.v1.Sector;
 import br.com.hd.util.repository.v1.RepositoryUtil;
 import jakarta.persistence.EntityManager;
 
