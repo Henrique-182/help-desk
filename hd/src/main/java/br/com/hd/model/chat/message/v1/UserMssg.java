@@ -17,28 +17,26 @@ public class UserMssg implements Serializable {
 	
 	@Id
 	@Column(name = "ID", nullable = false, unique = true)
-	private Long id;
+	private Long key;
 	
 	@Column(name = "USERNAME", nullable = false, unique = true)
 	private String username;
 	
-	@Column(name = "FULLNAME", nullable = false)
-	private String fullname;
-	
 	@Column(name = "USER_TYPE", nullable = false)
 	private UserType type;
 	
-	@Column(name = "ENABLED", nullable = false)
-	private Boolean enabled;
-
 	public UserMssg() {}
-
-	public Long getId() {
-		return id;
+	
+	public UserMssg(Long key) {
+		this.key = key;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public Long getKey() {
+		return key;
+	}
+
+	public void setKey(Long key) {
+		this.key = key;
 	}
 
 	public String getUsername() {
@@ -49,14 +47,6 @@ public class UserMssg implements Serializable {
 		this.username = username;
 	}
 
-	public String getFullname() {
-		return fullname;
-	}
-
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
-	}
-
 	public UserType getType() {
 		return type;
 	}
@@ -65,17 +55,9 @@ public class UserMssg implements Serializable {
 		this.type = type;
 	}
 
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(enabled, fullname, id, type, username);
+		return Objects.hash(key, type, username);
 	}
 
 	@Override
@@ -87,8 +69,7 @@ public class UserMssg implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		UserMssg other = (UserMssg) obj;
-		return Objects.equals(enabled, other.enabled) && Objects.equals(fullname, other.fullname)
-				&& Objects.equals(id, other.id) && type == other.type && Objects.equals(username, other.username);
+		return Objects.equals(key, other.key) && type == other.type && Objects.equals(username, other.username);
 	}
-	
+
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
 import br.com.hd.exceptions.auth.v1.InvalidJwtAuthenticationException;
+import br.com.hd.exceptions.generic.v1.InvalidArgumentsException;
 import br.com.hd.exceptions.generic.v1.RequiredObjectIsNullException;
 import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
 import br.com.hd.exceptions.response.v1.ExceptionResponse;
@@ -48,6 +49,12 @@ public class ResponseEntityExceptionHandler {
 		
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), exceptionMessage, webRequest.getDescription(false));
 		
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(InvalidArgumentsException.class)
+	public final ResponseEntity<ExceptionResponse> handleInvalidArgumentsExceptions(Exception exception, WebRequest webRequest) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), exception.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
 	

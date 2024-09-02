@@ -20,8 +20,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import br.com.hd.data.vo.chat.v1.SectorVO;
-import br.com.hd.data.vo.chat.v1.SimpleSectorVO;
+import br.com.hd.data.vo.chat.sector.v1.SectorVO;
+import br.com.hd.data.vo.chat.sector.v1.SimpleSectorVO;
 import br.com.hd.exceptions.generic.v1.RequiredObjectIsNullException;
 import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
 import br.com.hd.mappers.chat.v1.SectorMapper;
@@ -31,7 +31,7 @@ import br.com.hd.model.chat.sector.v1.Sector;
 import br.com.hd.repositories.chat.v1.SectorRepository;
 import br.com.hd.services.chat.v1.SectorService;
 import br.com.hd.unittests.mocks.auth.v1.UserMock;
-import br.com.hd.unittests.mocks.chat.v1.SectorMock;
+import br.com.hd.unittests.mocks.chat.sector.v1.SectorMock;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)

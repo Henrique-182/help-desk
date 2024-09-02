@@ -5,8 +5,8 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import br.com.hd.data.vo.chat.v1.SectorVO;
-import br.com.hd.data.vo.chat.v1.SimpleSectorVO;
+import br.com.hd.data.vo.chat.sector.v1.SectorVO;
+import br.com.hd.data.vo.chat.sector.v1.SimpleSectorVO;
 import br.com.hd.model.chat.sector.v1.Sector;
 
 @Mapper(componentModel = "spring")

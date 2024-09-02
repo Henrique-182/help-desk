@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.Objects;
 
 import br.com.hd.model.chat.message.v1.MessageType;
-import br.com.hd.model.chat.message.v1.UserMssg;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,11 +23,11 @@ public class MessageRoom implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", nullable = false, unique = true)
-	private Long id;
+	private Long key;
 	
 	@ManyToOne
 	@JoinColumn(name = "FK_USER")
-	private UserMssg user;
+	private UserRoom user;
 	
 	@Column(name = "CONTENT_TYPE", nullable = false)
 	private MessageType type;
@@ -36,24 +35,34 @@ public class MessageRoom implements Serializable {
 	@Column(name = "CONTENT", nullable = false)
 	private String content;
 	
-	@Column(name = "SENT_DATETIME", nullable = false)
-	private Date sentDatetime;
+	@Column(name = "CREATE_DATETIME", nullable = false)
+	private Date createDatetime;
+	
+	@Column(name = "UPDATE_DATETIME", nullable = false)
+	private Date updateDatetime;
+	
+	@Column(name = "DELETE_DATETIME", nullable = false)
+	private Date deleteDatetime;
+	
+	@ManyToOne
+    @JoinColumn(name = "FK_ROOM", nullable = false)
+    private Room room;
 	
 	public MessageRoom() {}
 	
-	public Long getId() {
-		return id;
+	public Long getKey() {
+		return key;
 	}
-	
-	public void setId(Long id) {
-		this.id = id;
+
+	public void setKey(Long key) {
+		this.key = key;
 	}
-	
-	public UserMssg getUser() {
+
+	public UserRoom getUser() {
 		return user;
 	}
 	
-	public void setUser(UserMssg user) {
+	public void setUser(UserRoom user) {
 		this.user = user;
 	}
 	
@@ -73,19 +82,35 @@ public class MessageRoom implements Serializable {
 		this.content = content;
 	}
 	
-	public Date getSentDatetime() {
-		return sentDatetime;
+	public Date getCreateDatetime() {
+		return createDatetime;
 	}
-	
-	public void setSentDatetime(Date sentDatetime) {
-		this.sentDatetime = sentDatetime;
+
+	public void setCreateDatetime(Date createDatetime) {
+		this.createDatetime = createDatetime;
 	}
-	
+
+	public Date getUpdateDatetime() {
+		return updateDatetime;
+	}
+
+	public void setUpdateDatetime(Date updateDatetime) {
+		this.updateDatetime = updateDatetime;
+	}
+
+	public Date getDeleteDatetime() {
+		return deleteDatetime;
+	}
+
+	public void setDeleteDatetime(Date deleteDatetime) {
+		this.deleteDatetime = deleteDatetime;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(content, id, sentDatetime, type, user);
+		return Objects.hash(content, createDatetime, deleteDatetime, key, room, type, updateDatetime, user);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -95,9 +120,10 @@ public class MessageRoom implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		MessageRoom other = (MessageRoom) obj;
-		return Objects.equals(content, other.content) && Objects.equals(id, other.id)
-				&& Objects.equals(sentDatetime, other.sentDatetime) && type == other.type
-				&& Objects.equals(user, other.user);
+		return Objects.equals(content, other.content) && Objects.equals(createDatetime, other.createDatetime)
+				&& Objects.equals(deleteDatetime, other.deleteDatetime) && Objects.equals(key, other.key)
+				&& Objects.equals(room, other.room) && type == other.type
+				&& Objects.equals(updateDatetime, other.updateDatetime) && Objects.equals(user, other.user);
 	}
 
 }

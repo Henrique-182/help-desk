@@ -38,8 +38,14 @@ public class Message implements Serializable {
 	@Column(name = "CONTENT", nullable = false)
 	private String content;
 	
-	@Column(name = "SENT_DATETIME", nullable = false)
-	private Date sentDatetime;
+	@Column(name = "CREATE_DATETIME", nullable = false)
+	private Date createDatetime;
+	
+	@Column(name = "UPDATE_DATETIME", nullable = true)
+	private Date updateDatetime;
+	
+	@Column(name = "DELETE_DATETIME", nullable = true)
+	private Date deleteDatetime;
 	
 	public Message() {}
 
@@ -83,17 +89,33 @@ public class Message implements Serializable {
 		this.content = content;
 	}
 
-	public Date getSentDatetime() {
-		return sentDatetime;
+	public Date getCreateDatetime() {
+		return createDatetime;
 	}
 
-	public void setSentDatetime(Date sentDatetime) {
-		this.sentDatetime = sentDatetime;
+	public void setCreateDatetime(Date createDatetime) {
+		this.createDatetime = createDatetime;
+	}
+
+	public Date getUpdateDatetime() {
+		return updateDatetime;
+	}
+
+	public void setUpdateDatetime(Date updateDatetime) {
+		this.updateDatetime = updateDatetime;
+	}
+
+	public Date getDeleteDatetime() {
+		return deleteDatetime;
+	}
+
+	public void setDeleteDatetime(Date deleteDatetime) {
+		this.deleteDatetime = deleteDatetime;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(content, id, room, sentDatetime, type, user);
+		return Objects.hash(content, createDatetime, deleteDatetime, id, room, type, updateDatetime, user);
 	}
 
 	@Override
@@ -105,9 +127,10 @@ public class Message implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Message other = (Message) obj;
-		return Objects.equals(content, other.content) && Objects.equals(id, other.id)
-				&& Objects.equals(room, other.room) && Objects.equals(sentDatetime, other.sentDatetime)
-				&& type == other.type && Objects.equals(user, other.user);
+		return Objects.equals(content, other.content) && Objects.equals(createDatetime, other.createDatetime)
+				&& Objects.equals(deleteDatetime, other.deleteDatetime) && Objects.equals(id, other.id)
+				&& Objects.equals(room, other.room) && type == other.type
+				&& Objects.equals(updateDatetime, other.updateDatetime) && Objects.equals(user, other.user);
 	}
 
 }

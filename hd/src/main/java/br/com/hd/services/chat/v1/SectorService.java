@@ -15,8 +15,8 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import br.com.hd.controllers.chat.v1.SectorController;
-import br.com.hd.data.vo.chat.v1.SectorVO;
-import br.com.hd.data.vo.chat.v1.SimpleSectorVO;
+import br.com.hd.data.vo.chat.sector.v1.SectorVO;
+import br.com.hd.data.vo.chat.sector.v1.SimpleSectorVO;
 import br.com.hd.exceptions.generic.v1.RequiredObjectIsNullException;
 import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
 import br.com.hd.mappers.chat.v1.SectorMapper;

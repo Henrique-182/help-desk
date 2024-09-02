@@ -1,6 +1,7 @@
 package br.com.hd.model.chat.room.v1;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,6 +30,15 @@ public class Room implements Serializable {
 	@Column(name = "CODE", nullable = false, unique = true)
 	private Integer code;
 	
+	@Column(name = "ROOM_STATUS", nullable = false)
+	private RoomStatus status;
+	
+	@Column(name = "CREATE_DATETIME", nullable = false)
+	private Date createDatetime;
+	
+	@Column(name = "CLOSE_DATETIME", nullable = true)
+	private Date closeDatetime;
+	
 	@ManyToOne
 	@JoinColumn(name = "FK_USER_CUSTOMER")
 	private UserRoom customer;
@@ -40,10 +51,10 @@ public class Room implements Serializable {
 	@JoinColumn(name = "FK_SECTOR")
 	private SectorRoom sector;
 	
-	@OneToMany
-	@JoinColumn
-	private List<MessageRoom> messages;
-
+	@OneToMany(mappedBy = "room")
+	@OrderBy
+    private List<MessageRoom> messages;
+	
 	public Room() {}
 
 	public Long getId() {
@@ -64,6 +75,30 @@ public class Room implements Serializable {
 
 	public UserRoom getCustomer() {
 		return customer;
+	}
+	
+	public RoomStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(RoomStatus status) {
+		this.status = status;
+	}
+	
+	public Date getCreateDatetime() {
+		return createDatetime;
+	}
+
+	public void setCreateDatetime(Date createDatetime) {
+		this.createDatetime = createDatetime;
+	}
+
+	public Date getCloseDatetime() {
+		return closeDatetime;
+	}
+
+	public void setCloseDatetime(Date closeDatetime) {
+		this.closeDatetime = closeDatetime;
 	}
 
 	public void setCustomer(UserRoom customer) {
@@ -96,7 +131,7 @@ public class Room implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(code, customer, employee, id, messages, sector);
+		return Objects.hash(closeDatetime, code, createDatetime, customer, employee, id, messages, sector, status);
 	}
 
 	@Override
@@ -108,9 +143,11 @@ public class Room implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Room other = (Room) obj;
-		return Objects.equals(code, other.code) && Objects.equals(customer, other.customer)
+		return Objects.equals(closeDatetime, other.closeDatetime) && Objects.equals(code, other.code)
+				&& Objects.equals(createDatetime, other.createDatetime) && Objects.equals(customer, other.customer)
 				&& Objects.equals(employee, other.employee) && Objects.equals(id, other.id)
-				&& Objects.equals(messages, other.messages) && Objects.equals(sector, other.sector);
+				&& Objects.equals(messages, other.messages) && Objects.equals(sector, other.sector)
+				&& status == other.status;
 	}
 
 }

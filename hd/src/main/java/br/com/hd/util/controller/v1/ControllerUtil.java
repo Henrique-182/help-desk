@@ -24,7 +24,7 @@ public class ControllerUtil {
 		return PageRequest.of(pageNumber, pageSize, Sort.by(sortDirection, sortBy));
 	}
 	
-	public User findUserByContent(SecurityContext context) {
+	public User findUserByContext(SecurityContext context) {
 		
 		return service.findUserByUsername(context.getAuthentication().getName());
 	}

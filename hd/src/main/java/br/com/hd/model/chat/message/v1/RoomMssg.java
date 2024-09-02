@@ -19,19 +19,23 @@ public class RoomMssg implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", nullable = false, unique = true)
-	private Long id;
+	private Long key;
 	
 	@Column(name = "CODE", nullable = false, unique = true)
 	private Integer code;
 
 	public RoomMssg() {}
-
-	public Long getId() {
-		return id;
+	
+	public RoomMssg(Long key) {
+		this.key = key;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public Long getKey() {
+		return key;
+	}
+
+	public void setKey(Long key) {
+		this.key = key;
 	}
 
 	public Integer getCode() {
@@ -44,7 +48,7 @@ public class RoomMssg implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(code, id);
+		return Objects.hash(code, key);
 	}
 
 	@Override
@@ -56,7 +60,7 @@ public class RoomMssg implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		RoomMssg other = (RoomMssg) obj;
-		return Objects.equals(code, other.code) && Objects.equals(id, other.id);
+		return Objects.equals(code, other.code) && Objects.equals(key, other.key);
 	}
-	
+
 }

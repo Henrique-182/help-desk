@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.hd.data.vo.chat.v1.SectorVO;
-import br.com.hd.data.vo.chat.v1.SimpleSectorVO;
-import br.com.hd.data.vo.chat.v1.SimpleSectorWrapperVO;
+import br.com.hd.data.vo.chat.sector.v1.SectorVO;
+import br.com.hd.data.vo.chat.sector.v1.SimpleSectorVO;
+import br.com.hd.data.vo.chat.sector.v1.SimpleSectorWrapperVO;
 import br.com.hd.model.auth.v1.User;
 import br.com.hd.services.chat.v1.SectorService;
 import br.com.hd.util.controller.v1.ControllerUtil;
@@ -127,7 +127,7 @@ public class SectorController {
 	@GetMapping(path = "/byUser")
 	public SimpleSectorWrapperVO findSectorsByUsername() {
 		
-		User currentUser = util.findUserByContent(SecurityContextHolder.getContext());
+		User currentUser = util.findUserByContext(SecurityContextHolder.getContext());
 		
 		return new SimpleSectorWrapperVO(service.findSectorsByUser(currentUser));
 	}

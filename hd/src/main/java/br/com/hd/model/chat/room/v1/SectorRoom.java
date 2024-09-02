@@ -19,19 +19,23 @@ public class SectorRoom implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", nullable = false, unique = true)
-	private Long id;
+	private Long key;
 	
 	@Column(name = "DESCRIPTION", nullable = false, unique = true)
 	private String description;
 
 	public SectorRoom() {}
-
-	public Long getId() {
-		return id;
+	
+	public SectorRoom(Long key) {
+		this.key = key;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public Long getKey() {
+		return key;
+	}
+
+	public void setKey(Long key) {
+		this.key = key;
 	}
 
 	public String getDescription() {
@@ -44,7 +48,7 @@ public class SectorRoom implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(description, id);
+		return Objects.hash(description, key);
 	}
 
 	@Override
@@ -56,7 +60,7 @@ public class SectorRoom implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		SectorRoom other = (SectorRoom) obj;
-		return Objects.equals(description, other.description) && Objects.equals(id, other.id);
+		return Objects.equals(description, other.description) && Objects.equals(key, other.key);
 	}
-	
+
 }
