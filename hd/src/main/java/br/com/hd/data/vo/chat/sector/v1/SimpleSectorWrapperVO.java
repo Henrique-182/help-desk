@@ -9,11 +9,13 @@ public class SimpleSectorWrapperVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private List<SimpleSectorVO> sectors;
+	private String userType;
 
 	public SimpleSectorWrapperVO() {}
 	
-	public SimpleSectorWrapperVO(List<SimpleSectorVO> sectors) {
+	public SimpleSectorWrapperVO(List<SimpleSectorVO> sectors, String userType) {
 		this.sectors = sectors;
+		this.userType = userType;
 	}
 
 	public List<SimpleSectorVO> getSectors() {
@@ -24,9 +26,17 @@ public class SimpleSectorWrapperVO implements Serializable {
 		this.sectors = sectors;
 	}
 
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(sectors);
+		return Objects.hash(sectors, userType);
 	}
 
 	@Override
@@ -38,7 +48,7 @@ public class SimpleSectorWrapperVO implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		SimpleSectorWrapperVO other = (SimpleSectorWrapperVO) obj;
-		return Objects.equals(sectors, other.sectors);
+		return Objects.equals(sectors, other.sectors) && Objects.equals(userType, other.userType);
 	}
-	
+
 }

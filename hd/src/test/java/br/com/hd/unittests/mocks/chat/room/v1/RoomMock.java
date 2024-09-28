@@ -32,6 +32,7 @@ public class RoomMock {
 			number % 2 == 0 ? RoomStatus.Chatting
 			: RoomStatus.Closed
 		);
+		entity.setPriority(new RoomPriorityMock().entity(number));
 		entity.setCreateDatetime(new Date(number));
 		entity.setCloseDatetime(new Date(number + number));
 		entity.setEmployee(UserRoomMock.entity());
@@ -50,6 +51,7 @@ public class RoomMock {
 			number % 2 == 0 ? RoomStatus.Chatting
 			: RoomStatus.Closed
 		);
+		vo.setPriority(new RoomPriorityMock().entity(number));
 		vo.setCreateDatetime(new Date(number));
 		vo.setCloseDatetime(new Date(number + number));
 		vo.setEmployee(UserRoomMock.entity());

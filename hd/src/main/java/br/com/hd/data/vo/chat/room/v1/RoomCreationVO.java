@@ -11,10 +11,11 @@ public class RoomCreationVO implements Serializable {
 	
 	@NotNull
 	private Long customerKey;
-	private Long employeeKey;
 	
 	@NotNull
 	private Long sectorKey;
+	
+	private String priority;
 	
 	public RoomCreationVO() {}
 
@@ -26,14 +27,6 @@ public class RoomCreationVO implements Serializable {
 		this.customerKey = customerKey;
 	}
 
-	public Long getEmployeeKey() {
-		return employeeKey;
-	}
-
-	public void setEmployeeKey(Long employeeKey) {
-		this.employeeKey = employeeKey;
-	}
-
 	public Long getSectorKey() {
 		return sectorKey;
 	}
@@ -42,9 +35,17 @@ public class RoomCreationVO implements Serializable {
 		this.sectorKey = sectorKey;
 	}
 
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(customerKey, employeeKey, sectorKey);
+		return Objects.hash(customerKey, priority, sectorKey);
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class RoomCreationVO implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		RoomCreationVO other = (RoomCreationVO) obj;
-		return Objects.equals(customerKey, other.customerKey) && Objects.equals(employeeKey, other.employeeKey)
+		return Objects.equals(customerKey, other.customerKey) && Objects.equals(priority, other.priority)
 				&& Objects.equals(sectorKey, other.sectorKey);
 	}
 

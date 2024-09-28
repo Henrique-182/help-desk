@@ -1,2 +1,2 @@
 INSERT INTO CHAT.TB_SECTOR_USER_EMPLOYEE (FK_SECTOR, FK_USER) 
-VALUES (1, 1), (2, 1), (3, 1), (2, 2), (3, 2);
+VALUES (1, 2), (2, 2), (3, 2);

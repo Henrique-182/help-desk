@@ -21,8 +21,8 @@ import br.com.hd.exceptions.generic.v1.RequiredObjectIsNullException;
 import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
 import br.com.hd.mappers.chat.v1.SectorMapper;
 import br.com.hd.model.auth.v1.User;
-import br.com.hd.model.auth.v1.UserType;
 import br.com.hd.model.chat.sector.v1.Sector;
+import br.com.hd.model.chat.sector.v1.UserSctr;
 import br.com.hd.repositories.chat.v1.SectorCustomRepository;
 import br.com.hd.repositories.chat.v1.SectorRepository;
 
@@ -70,7 +70,7 @@ public class SectorService {
 	
 	public List<SimpleSectorVO> findSectorsByUser(User currentUser) {
 		
-		return currentUser.getType() == UserType.Customer
+		return currentUser.getType().getDescription().equalsIgnoreCase("Customer")
 				? mapper
 					.toSimpleVOList(repository.findSectorsByCustomer(currentUser.getId()))
 					.stream()
@@ -82,6 +82,19 @@ public class SectorService {
 					.map(s -> addLinkSelfRel(s))
 					.toList()
 				;
+	}
+	
+	public List<UserSctr> findUsersBySector(String type, Long id) {
+		
+		if (type.equalsIgnoreCase("Employee")) return repository.findEmployeesBySector(id);
+		else return repository.findCustomersBySector(id);
+	}
+	
+	public List<UserSctr> findUsersByType(String type) {
+		
+		List<UserSctr> persistedList = repository.findByType(type);
+		
+		return persistedList;
 	}
 	
 	public SectorVO create(SectorVO data) {

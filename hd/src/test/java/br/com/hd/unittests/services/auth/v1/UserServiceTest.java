@@ -26,7 +26,6 @@ import br.com.hd.exceptions.generic.v1.RequiredObjectIsNullException;
 import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
 import br.com.hd.mappers.auth.v1.UserMapper;
 import br.com.hd.model.auth.v1.User;
-import br.com.hd.model.auth.v1.UserType;
 import br.com.hd.repositories.auth.v1.UserRepository;
 import br.com.hd.services.auth.jwt.v1.UserService;
 import br.com.hd.unittests.mocks.auth.v1.CreateUserMock;
@@ -81,6 +80,7 @@ public class UserServiceTest {
 		assertEquals(0, persistedUser.getKey());
 		assertEquals("Username0", persistedUser.getUsername());
 		assertEquals("Fullname0", persistedUser.getFullname());
+		assertEquals("Employee", persistedUser.getType().getDescription());
 		assertEquals(true, persistedUser.getAccountNonExpired());
 		assertEquals(true, persistedUser.getAccountNonLocked());
 		assertEquals(true, persistedUser.getCredentialsNonExpired());
@@ -117,7 +117,7 @@ public class UserServiceTest {
 		assertEquals(0, createdUser.getKey());
 		assertEquals("Username0", createdUser.getUsername());
 		assertEquals("Fullname0", createdUser.getFullname());
-		assertEquals(UserType.Employee, createdUser.getType());
+		assertEquals("Employee", createdUser.getType().getDescription());
 		assertEquals(true, createdUser.getAccountNonExpired());
 		assertEquals(true, createdUser.getAccountNonLocked());
 		assertEquals(true, createdUser.getCredentialsNonExpired());
@@ -154,6 +154,7 @@ public class UserServiceTest {
 		assertEquals(0, updatedUser.getKey());
 		assertEquals("Username0", updatedUser.getUsername());
 		assertEquals("Fullname0", updatedUser.getFullname());
+		assertEquals("Employee", updatedUser.getType().getDescription());
 		assertEquals(true, updatedUser.getAccountNonExpired());
 		assertEquals(true, updatedUser.getAccountNonLocked());
 		assertEquals(true, updatedUser.getCredentialsNonExpired());

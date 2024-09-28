@@ -1,6 +1,5 @@
 package br.com.hd.unittests.mocks.chat.sector.v1;
 
-import br.com.hd.model.auth.v1.UserType;
 import br.com.hd.model.chat.sector.v1.UserSctr;
 
 public class UserSctrMock {
@@ -11,10 +10,9 @@ public class UserSctrMock {
 	
 	public static UserSctr entity(Long number) {
 		UserSctr entity = new UserSctr();
-		entity.setId(number);
+		entity.setKey(number);
 		entity.setUsername("Username" + number);
-		entity.setFullname("Fullname" + number);
-		entity.setType(number % 2 == 0 ? UserType.Employee : UserType.Customer);
+		entity.setType(UserTypeSctrMock.entity(number));
 		entity.setEnabled(true);
 		
 		return entity;

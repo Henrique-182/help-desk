@@ -58,7 +58,7 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 		mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		
-		credentials = new AccountCredentialsVO("ADM", "ADMINISTRATOR#@!312");
+		credentials = new AccountCredentialsVO("MANAGER", "MANAGER#@!312");
 	}
 	
 	@Test
@@ -118,6 +118,9 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 		
 		assertEquals(5, createdRoom.getCode());
 		assertEquals(RoomStatus.Open, createdRoom.getStatus());
+		assertEquals("Normal", createdRoom.getPriority().getDescription());
+		assertNull(createdRoom.getReason());
+		assertNull(createdRoom.getSolution());
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new SimpleDateFormat("yyyy-MM-dd").format(createdRoom.getCreateDatetime()));
 		assertNull(createdRoom.getCloseDatetime());
 		assertEquals(3, createdRoom.getCustomer().getKey());
@@ -149,10 +152,13 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 		
 		assertEquals(6, createdRoom.getCode());
 		assertEquals(RoomStatus.Chatting, createdRoom.getStatus());
+		assertEquals("Normal", createdRoom.getPriority().getDescription());
+		assertNull(createdRoom.getReason());
+		assertNull(createdRoom.getSolution());
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new SimpleDateFormat("yyyy-MM-dd").format(createdRoom.getCreateDatetime()));
 		assertNull(createdRoom.getCloseDatetime());
 		assertEquals(3, createdRoom.getCustomer().getKey());
-		assertEquals(1, createdRoom.getEmployee().getKey());
+		assertEquals(2, createdRoom.getEmployee().getKey());
 		assertEquals(2, createdRoom.getSector().getKey());
 		
 		assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/v1/room/6\"}"));
@@ -177,6 +183,9 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 		assertEquals(5L, persistedRoom.getKey());
 		assertEquals(5, persistedRoom.getCode());
 		assertEquals(RoomStatus.Open, persistedRoom.getStatus());
+		assertEquals("Normal", persistedRoom.getPriority().getDescription());
+		assertNull(persistedRoom.getReason());
+		assertNull(persistedRoom.getSolution());
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new SimpleDateFormat("yyyy-MM-dd").format(persistedRoom.getCreateDatetime()));
 		assertNull(persistedRoom.getCloseDatetime());
 		assertEquals("COMMON_USER", persistedRoom.getCustomer().getUsername());
@@ -210,6 +219,9 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 		assertEquals(5L, roomZero.getKey());
 		assertEquals(5, roomZero.getCode());
 		assertEquals(RoomStatus.Open, roomZero.getStatus());
+		assertEquals("Normal", roomZero.getPriority().getDescription());
+		assertNull(roomZero.getReason());
+		assertNull(roomZero.getSolution());
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new SimpleDateFormat("yyyy-MM-dd").format(roomZero.getCreateDatetime()));
 		assertNull(roomZero.getCloseDatetime());
 		assertEquals("COMMON_USER", roomZero.getCustomer().getUsername());
@@ -243,10 +255,13 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 		assertEquals(6L, roomZero.getKey());
 		assertEquals(6, roomZero.getCode());
 		assertEquals(RoomStatus.Chatting, roomZero.getStatus());
+		assertEquals("Normal", roomZero.getPriority().getDescription());
+		assertNull(roomZero.getReason());
+		assertNull(roomZero.getSolution());
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new SimpleDateFormat("yyyy-MM-dd").format(roomZero.getCreateDatetime()));
 		assertNull(roomZero.getCloseDatetime());
 		assertEquals("COMMON_USER", roomZero.getCustomer().getUsername());
-		assertEquals("ADM", roomZero.getEmployee().getUsername());
+		assertEquals("MANAGER", roomZero.getEmployee().getUsername());
 		assertEquals("Sector B", roomZero.getSector().getDescription());
 		
 		assertTrue(content.contains("{\"rel\":\"self\",\"href\":\"http://localhost:8888/v1/room/6\"}"));
@@ -254,10 +269,49 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 	
 	@Test
 	@Order(6)
+	void testUpdateReasonAndPriority() throws JsonMappingException, JsonProcessingException {
+		
+		RoomUpdateVO data = new RoomUpdateVO();
+		data.setReason("Reason1");
+		data.setSolution("Solution1");
+		data.setPriority("VERY HIGH");
+		
+		var content = given().spec(specification)
+				.pathParam("code", room2.getCode())
+				.body(data)
+				.when()
+					.patch("/reasonAndSolutionAndPriority/{code}")
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+					.asString();
+		
+		RoomVO updatedRoom = mapper.readValue(content, RoomVO.class);
+		
+		assertEquals(6L, updatedRoom.getKey());
+		assertEquals(6, updatedRoom.getCode());
+		assertEquals(RoomStatus.Chatting, updatedRoom.getStatus());
+		assertEquals("Very High", updatedRoom.getPriority().getDescription());
+		assertEquals("Reason1", updatedRoom.getReason());
+		assertEquals("Solution1", updatedRoom.getSolution());
+		assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new SimpleDateFormat("yyyy-MM-dd").format(updatedRoom.getCreateDatetime()));
+		assertNull(updatedRoom.getCloseDatetime());
+		assertEquals("COMMON_USER", updatedRoom.getCustomer().getUsername());
+		assertEquals("MANAGER", updatedRoom.getEmployee().getUsername());
+		assertEquals("Sector B", updatedRoom.getSector().getDescription());
+
+		assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/v1/room/6\"}"));
+	}
+	
+	@Test
+	@Order(7)
 	void testUpdateStatusByCode() throws JsonMappingException, JsonProcessingException {
 		
 		RoomUpdateVO data = new RoomUpdateVO();
 		data.setStatus(RoomStatus.Closed);
+		data.setReason("Reason2");
+		data.setSolution("Solution2");
 		
 		var content = given().spec(specification)
 				.pathParam("code", room2.getCode())
@@ -276,28 +330,26 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 		assertEquals(6L, updatedRoom.getKey());
 		assertEquals(6, updatedRoom.getCode());
 		assertEquals(RoomStatus.Closed, updatedRoom.getStatus());
+		assertEquals("Very High", updatedRoom.getPriority().getDescription());
+		assertEquals("Reason2", updatedRoom.getReason());
+		assertEquals("Solution2", updatedRoom.getSolution());
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new SimpleDateFormat("yyyy-MM-dd").format(updatedRoom.getCreateDatetime()));
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new SimpleDateFormat("yyyy-MM-dd").format(updatedRoom.getCloseDatetime()));
 		assertEquals("COMMON_USER", updatedRoom.getCustomer().getUsername());
-		assertEquals("ADM", updatedRoom.getEmployee().getUsername());
+		assertEquals("MANAGER", updatedRoom.getEmployee().getUsername());
 		assertEquals("Sector B", updatedRoom.getSector().getDescription());
 		
 		assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/v1/room/6\"}"));
 	}
 	
 	@Test
-	@Order(7)
-	void testUpdateEmployeeAndStatusByCode() throws JsonMappingException, JsonProcessingException {
-		
-		RoomUpdateVO data = new RoomUpdateVO();
-		data.setEmployeeKey(2L);
-		data.setStatus(RoomStatus.Chatting);
+	@Order(8)
+	void testEmployeeEnterRoomByCode() throws JsonMappingException, JsonProcessingException {
 		
 		var content = given().spec(specification)
 				.pathParam("code", room.getCode())
-				.body(data)
 				.when()
-					.patch("/employeeAndStatus/{code}")
+					.patch("/enterRoom/{code}")
 				.then()
 					.statusCode(200)
 				.extract()
@@ -310,6 +362,7 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 		assertEquals(5L, updatedRoom.getKey());
 		assertEquals(5, updatedRoom.getCode());
 		assertEquals(RoomStatus.Chatting, updatedRoom.getStatus());
+		assertEquals("Normal", updatedRoom.getPriority().getDescription());
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new SimpleDateFormat("yyyy-MM-dd").format(updatedRoom.getCreateDatetime()));
 		assertNull(updatedRoom.getCloseDatetime());
 		assertEquals("COMMON_USER", updatedRoom.getCustomer().getUsername());
@@ -320,19 +373,18 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
-	@Order(8)
-	void testUpdateEmployeeAndSectorAndStatusByCode() throws JsonMappingException, JsonProcessingException {
+	@Order(9)
+	void testTransferRoomByCode() throws JsonMappingException, JsonProcessingException {
 		
 		RoomUpdateVO data = new RoomUpdateVO();
 		data.setEmployeeKey(2L);
 		data.setSectorKey(3L);
-		data.setStatus(RoomStatus.Transferred);
 		
 		var content = given().spec(specification)
-				.pathParam("code", room2.getCode())
+				.pathParam("code", room.getCode())
 				.body(data)
 				.when()
-					.patch("/employeeAndSectorAndStatus/{code}")
+					.patch("/transferRoom/{code}")
 				.then()
 					.statusCode(200)
 				.extract()
@@ -340,33 +392,36 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 					.asString();
 		
 		RoomVO updatedRoom = mapper.readValue(content, RoomVO.class);
-		room2 = updatedRoom;
+		room = updatedRoom;
 		
-		assertEquals(6L, updatedRoom.getKey());
-		assertEquals(6, updatedRoom.getCode());
+		assertEquals(5L, updatedRoom.getKey());
+		assertEquals(5, updatedRoom.getCode());
 		assertEquals(RoomStatus.Transferred, updatedRoom.getStatus());
+		assertEquals("Normal", updatedRoom.getPriority().getDescription());
+		assertNull(updatedRoom.getReason());
+		assertNull(updatedRoom.getSolution());
 		assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new SimpleDateFormat("yyyy-MM-dd").format(updatedRoom.getCreateDatetime()));
-		assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), new SimpleDateFormat("yyyy-MM-dd").format(updatedRoom.getCloseDatetime()));
+		assertNull(updatedRoom.getCloseDatetime());
 		assertEquals("COMMON_USER", updatedRoom.getCustomer().getUsername());
 		assertEquals(2L, updatedRoom.getEmployee().getKey());
 		assertEquals(3L, updatedRoom.getSector().getKey());
 		
-		assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/v1/room/6\"}"));
+		assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/v1/room/5\"}"));
 	}
 	
 	@Test
-	@Order(9)
+	@Order(10)
 	void testDeleteByCode() throws JsonMappingException, JsonProcessingException {
 		
 		given().spec(specification)
-			.pathParam("code", room.getKey())
+			.pathParam("code", room.getCode())
 			.when()
 				.delete("/{code}")
 			.then()
 				.statusCode(204);
 		
 		given().spec(specification)
-			.pathParam("code", room2.getKey())
+			.pathParam("code", room2.getCode())
 			.when()
 				.delete("/{code}")
 			.then()

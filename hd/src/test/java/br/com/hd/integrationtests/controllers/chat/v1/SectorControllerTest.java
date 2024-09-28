@@ -28,9 +28,11 @@ import br.com.hd.integrationtests.data.vo.chat.sector.v1.SectorVO;
 import br.com.hd.integrationtests.data.vo.chat.sector.v1.SectorWrapperVO;
 import br.com.hd.integrationtests.data.vo.chat.sector.v1.SimpleSectorVO;
 import br.com.hd.integrationtests.data.vo.chat.sector.v1.SimpleSectorWrapperVO;
+import br.com.hd.integrationtests.data.vo.chat.sector.v1.UserSctrWrapperVO;
 import br.com.hd.integrationtests.mocks.chat.sector.v1.SectorMock;
 import br.com.hd.integrationtests.mocks.chat.sector.v1.UserSctrMock;
 import br.com.hd.integrationtests.testcontainers.v1.AbstractIntegrationTest;
+import br.com.hd.model.chat.sector.v1.UserSctr;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -53,7 +55,7 @@ public class SectorControllerTest extends AbstractIntegrationTest {
 		mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		
-		credentials = new AccountCredentialsVO("ADM", "ADMINISTRATOR#@!312");
+		credentials = new AccountCredentialsVO("MANAGER", "MANAGER#@!312");
 	}
 	
 	@Test
@@ -113,7 +115,7 @@ public class SectorControllerTest extends AbstractIntegrationTest {
 		
 		assertEquals("Description0", createdSector.getDescription());
 		assertEquals("COMMON_USER", createdSector.getCustomers().get(0).getUsername());
-		assertEquals("ADM", createdSector.getEmployees().get(0).getUsername());
+		assertEquals("MANAGER", createdSector.getEmployees().get(0).getUsername());
 		
 		assertTrue(content.contains("\"sectorVOList\":{\"href\":\"http://localhost:8888/v1/sector?pageNumber=0&pageSize=10&sortBy=description&direction=asc\"}"));
 	}
@@ -137,7 +139,7 @@ public class SectorControllerTest extends AbstractIntegrationTest {
 		assertEquals(4, persistedSector.getKey());
 		assertEquals("Description0", persistedSector.getDescription());
 		assertEquals("COMMON_USER", persistedSector.getCustomers().get(0).getUsername());
-		assertEquals("ADM", persistedSector.getEmployees().get(0).getUsername());
+		assertEquals("MANAGER", persistedSector.getEmployees().get(0).getUsername());
 		
 		assertTrue(content.contains("\"sectorVOList\":{\"href\":\"http://localhost:8888/v1/sector?pageNumber=0&pageSize=10&sortBy=description&direction=asc\"}"));
 	}
@@ -207,18 +209,45 @@ public class SectorControllerTest extends AbstractIntegrationTest {
 		assertEquals(1, sectorZero.getKey());
 		assertEquals("Sector A", sectorZero.getDescription());
 		assertEquals("COMMON_USER", sectorZero.getCustomers().get(0).getUsername());
-		assertEquals("ADM", sectorZero.getEmployees().get(0).getUsername());
+		assertEquals("MANAGER", sectorZero.getEmployees().get(0).getUsername());
 		
 		SectorVO sectorOne = resultList.get(1);
 		
 		assertEquals(2, sectorOne.getKey());
 		assertEquals("Sector B", sectorOne.getDescription());
 		assertEquals("COMMON_USER", sectorOne.getCustomers().get(0).getUsername());
-		assertEquals("ADM", sectorOne.getEmployees().get(0).getUsername());
+		assertEquals("MANAGER", sectorOne.getEmployees().get(0).getUsername());
 	}
 	
 	@Test
 	@Order(6)
+	void testFindUsersByType() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.pathParam("type", "Customer")
+				.when()
+				.get("/byType/{type}")
+				.then()
+				.statusCode(200)
+				.extract()
+				.body()
+				.asString();
+		
+		UserSctrWrapperVO wrapper = mapper.readValue(content, UserSctrWrapperVO.class);
+		
+		List<UserSctr> list = wrapper.getUsers();
+		
+		UserSctr userZero = list.get(0);
+		
+		assertEquals(3, userZero.getKey());
+		assertEquals("COMMON_USER", userZero.getUsername());
+		assertEquals("Customer", userZero.getType().getDescription());
+		assertEquals(true, userZero.getEnabled());
+		assertEquals("COMMON_USER", userZero.getPermissions().get(0).getDescription());
+	}
+	
+	@Test
+	@Order(7)
 	void testFindSectorsByUser() throws JsonMappingException, JsonProcessingException {
 		
 		var content = given().spec(specification)
@@ -250,7 +279,7 @@ public class SectorControllerTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
-	@Order(7)
+	@Order(8)
 	void testHATEOAS() throws JsonMappingException, JsonProcessingException {
 		
 		var content = given().spec(specification)

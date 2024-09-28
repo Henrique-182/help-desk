@@ -36,7 +36,7 @@ public class SectorMock {
 		Sector entity = new Sector();
 		entity.setId(number);
 		entity.setDescription("Description" + number);
-		entity.setEmployees(List.of(UserSctrMock.entity(1L)));
+		entity.setEmployees(List.of(UserSctrMock.entity(2L)));
 		entity.setCustomers(List.of(UserSctrMock.entity(3L)));
 		
 		return entity;
@@ -46,7 +46,7 @@ public class SectorMock {
 		SectorVO vo = new SectorVO();
 		vo.setKey(number);
 		vo.setDescription("Description" + number);
-		vo.setEmployees(List.of(UserSctrMock.entity(1L)));
+		vo.setEmployees(List.of(UserSctrMock.entity(2L)));
 		vo.setCustomers(List.of(UserSctrMock.entity(3L)));
 		
 		return vo;

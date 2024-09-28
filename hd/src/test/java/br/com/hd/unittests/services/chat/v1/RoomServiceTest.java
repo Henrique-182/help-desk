@@ -25,12 +25,14 @@ import br.com.hd.data.vo.chat.room.v1.RoomUpdateVO;
 import br.com.hd.data.vo.chat.room.v1.RoomVO;
 import br.com.hd.exceptions.generic.v1.InvalidArgumentsException;
 import br.com.hd.mappers.chat.v1.RoomMapper;
+import br.com.hd.model.auth.v1.User;
 import br.com.hd.model.chat.room.v1.Room;
 import br.com.hd.model.chat.room.v1.RoomStatus;
 import br.com.hd.model.chat.room.v1.SectorRoom;
 import br.com.hd.model.chat.room.v1.UserRoom;
 import br.com.hd.repositories.chat.v1.RoomRepository;
 import br.com.hd.services.chat.v1.RoomService;
+import br.com.hd.unittests.mocks.auth.v1.UserMock;
 import br.com.hd.unittests.mocks.chat.room.v1.RoomMock;
 import br.com.hd.unittests.mocks.chat.room.v1.SectorRoomMock;
 import br.com.hd.unittests.mocks.chat.room.v1.UserRoomMock;
@@ -71,6 +73,7 @@ public class RoomServiceTest {
 		assertEquals(1L, persistedRoom.getKey());
 		assertEquals(1, persistedRoom.getCode());
 		assertEquals(RoomStatus.Closed, persistedRoom.getStatus());
+		assertEquals("Description1", persistedRoom.getPriority().getDescription());
 		assertEquals(new Date(code), persistedRoom.getCreateDatetime());
 		assertEquals(new Date(code + code), persistedRoom.getCloseDatetime());
 		assertEquals("Username1", persistedRoom.getCustomer().getUsername());
@@ -119,6 +122,9 @@ public class RoomServiceTest {
 		assertEquals(0L, createdRoom.getKey());
 		assertEquals(0, createdRoom.getCode());
 		assertEquals(RoomStatus.Open, createdRoom.getStatus());
+		assertEquals("Description0", createdRoom.getPriority().getDescription());
+		assertNull(createdRoom.getReason());
+		assertNull(createdRoom.getSolution());
 		assertEquals(new Date(0), createdRoom.getCreateDatetime());
 		assertEquals(new Date(0), createdRoom.getCloseDatetime());
 		assertEquals("Username1", createdRoom.getCustomer().getUsername());
@@ -132,7 +138,7 @@ public class RoomServiceTest {
 	@Test
 	void testCreateByEmployee() {
 		
-		Long employeeKey = 2L;
+		User currentUser = UserMock.entity();
 		
 		Long customerKey = 1L;
 		
@@ -140,34 +146,33 @@ public class RoomServiceTest {
 		
 		RoomCreationVO data = new RoomCreationVO();
 		data.setCustomerKey(customerKey);
-		data.setEmployeeKey(employeeKey);
 		data.setSectorKey(sectorKey);
 		
 		Room mockEntity = RoomMock.entity();
-		mockEntity.setEmployee(UserRoomMock.entity(employeeKey));
 		mockEntity.setCustomer(UserRoomMock.entity(customerKey));
 		mockEntity.setSector(SectorRoomMock.entity(sectorKey));
 		
 		Room updatedEntity = mockEntity;
 		
 		RoomVO mockVO = RoomMock.vo();
-		mockVO.setEmployee(UserRoomMock.entity(employeeKey));
 		mockVO.setCustomer(UserRoomMock.entity(customerKey));
 		mockVO.setSector(SectorRoomMock.entity(sectorKey));
 		
-		when(util.employeeExists(employeeKey)).thenReturn(true);
 		when(util.customerExists(customerKey)).thenReturn(true);
 		when(util.sectorExists(sectorKey)).thenReturn(true);
 		when(repository.save(any(Room.class))).thenReturn(updatedEntity);
 		when(mapper.toVO(updatedEntity)).thenReturn(mockVO);
 		
-		RoomVO createdRoom = service.createByEmployee(data);
+		RoomVO createdRoom = service.createByEmployee(currentUser, data);
 		
 		assertNotNull(createdRoom);
 		
 		assertEquals(0L, createdRoom.getKey());
 		assertEquals(0, createdRoom.getCode());
 		assertEquals(RoomStatus.Chatting, createdRoom.getStatus());
+		assertEquals("Description0", createdRoom.getPriority().getDescription());
+		assertNull(createdRoom.getReason());
+		assertNull(createdRoom.getSolution());
 		assertEquals(new Date(0), createdRoom.getCreateDatetime());
 		assertEquals(new Date(0), createdRoom.getCloseDatetime());
 		assertEquals("Username1", createdRoom.getCustomer().getUsername());
@@ -181,7 +186,7 @@ public class RoomServiceTest {
 	@Test
 	void testCreateByEmployeeWithInvalidArgumentsException() {
 		
-		Long employeeKey = 1L;
+		User currentUser = UserMock.entity();
 		
 		Long customerKey = 1L;
 		
@@ -189,11 +194,10 @@ public class RoomServiceTest {
 		
 		RoomCreationVO data = new RoomCreationVO();
 		data.setCustomerKey(customerKey);
-		data.setEmployeeKey(employeeKey);
 		data.setSectorKey(sectorKey);
 		
 		Exception exception = assertThrows(InvalidArgumentsException.class, () -> {
-			service.createByEmployee(data);
+			service.createByEmployee(currentUser, data);
 		});
 		
 		String expectedMessage = "It is not possible to create the room. Employee and Customer are equal !";
@@ -232,6 +236,9 @@ public class RoomServiceTest {
 		assertEquals(0L, updatedRoom.getKey());
 		assertEquals(0, updatedRoom.getCode());
 		assertEquals(RoomStatus.Paused, updatedRoom.getStatus());
+		assertEquals("Description0", updatedRoom.getPriority().getDescription());
+		assertNull(updatedRoom.getReason());
+		assertNull(updatedRoom.getSolution());
 		assertEquals(new Date(0), updatedRoom.getCreateDatetime());
 		assertEquals(new Date(0), updatedRoom.getCloseDatetime());
 		assertEquals("Username1", updatedRoom.getCustomer().getUsername());
@@ -243,44 +250,33 @@ public class RoomServiceTest {
 	}
 	
 	@Test
-	void testUpdateEmployeeAndStatusByCode() {
+	void testEmployeeEnterRoomByCode() {
 		
 		Integer code = 0;
 		
-		UserRoom employeeMock = UserRoomMock.entity(10L);
-		
-		RoomStatus status = RoomStatus.Transferred;
-		
-		RoomUpdateVO data = new RoomUpdateVO();
-		data.setStatus(status);
-		data.setEmployeeKey(employeeMock.getKey());
-		
 		Room mockEntity = RoomMock.entity();
-		mockEntity.setStatus(status);
-		mockEntity.setEmployee(employeeMock);
 		
 		Room updatedEntity = mockEntity;
 		
 		RoomVO mockVO = RoomMock.vo();
-		mockVO.setStatus(status);
-		mockVO.setEmployee(employeeMock);
+		
+		User currentUser = UserMock.entity();
 
 		when(repository.findByCode(code)).thenReturn(Optional.of(mockEntity));
-		when(util.employeeExists(employeeMock.getKey())).thenReturn(true);
 		when(repository.save(mockEntity)).thenReturn(updatedEntity);
 		when(mapper.toVO(mockEntity)).thenReturn(mockVO);
 		
-		RoomVO updatedRoom = service.updateEmployeeAndStatusByCode(code, data);
+		RoomVO updatedRoom = service.employeeEnterRoomByCode(code, currentUser);
 		
 		assertNotNull(updatedRoom);
 		
 		assertEquals(0L, updatedRoom.getKey());
 		assertEquals(0, updatedRoom.getCode());
-		assertEquals(RoomStatus.Transferred, updatedRoom.getStatus());
+		assertEquals(RoomStatus.Chatting, updatedRoom.getStatus());
 		assertEquals(new Date(0), updatedRoom.getCreateDatetime());
 		assertEquals(new Date(0), updatedRoom.getCloseDatetime());
 		assertEquals("Username1", updatedRoom.getCustomer().getUsername());
-		assertEquals("Username10", updatedRoom.getEmployee().getUsername());
+		assertEquals("Username0", updatedRoom.getEmployee().getUsername());
 		assertEquals("Description0", updatedRoom.getSector().getDescription());
 		assertEquals("Content0", updatedRoom.getMessages().get(0).getContent());
 		
@@ -288,7 +284,7 @@ public class RoomServiceTest {
 	}
 	
 	@Test
-	void testUpdateEmployeeAndSectorAndStatusByCode() {
+	void testTransferRoomByCode() {
 		
 		Integer code = 0;
 		
@@ -296,25 +292,20 @@ public class RoomServiceTest {
 		
 		SectorRoom sectorMock = SectorRoomMock.entity(5L);
 		
-		RoomStatus status = RoomStatus.Transferred;
-		
 		RoomUpdateVO data = new RoomUpdateVO();
-		data.setStatus(status);
 		data.setEmployeeKey(employeeMock.getKey());
 		data.setSectorKey(sectorMock.getKey());
 		
 		Room mockEntity = RoomMock.entity();
-		mockEntity.setStatus(status);
 		mockEntity.setEmployee(employeeMock);
 		mockEntity.setSector(sectorMock);
 		
 		Room updatedEntity = mockEntity;
 		
 		RoomVO mockVO = RoomMock.vo();
-		mockVO.setStatus(status);
+		mockVO.setStatus(RoomStatus.Transferred);
 		mockVO.setEmployee(employeeMock);
 		mockVO.setSector(sectorMock);
-
 		
 		when(repository.findByCode(code)).thenReturn(Optional.of(mockEntity));
 		when(util.employeeExists(employeeMock.getKey())).thenReturn(true);
@@ -322,13 +313,16 @@ public class RoomServiceTest {
 		when(repository.save(mockEntity)).thenReturn(updatedEntity);
 		when(mapper.toVO(mockEntity)).thenReturn(mockVO);
 		
-		RoomVO updatedRoom = service.updateEmployeeAndSectorAndStatusByCode(code, data);
+		RoomVO updatedRoom = service.transferRoomByCode(code, data);
 		
 		assertNotNull(updatedRoom);
 		
 		assertEquals(0L, updatedRoom.getKey());
 		assertEquals(0, updatedRoom.getCode());
 		assertEquals(RoomStatus.Transferred, updatedRoom.getStatus());
+		assertEquals("Description0", updatedRoom.getPriority().getDescription());
+		assertNull(updatedRoom.getReason());
+		assertNull(updatedRoom.getSolution());
 		assertEquals(new Date(0), updatedRoom.getCreateDatetime());
 		assertEquals(new Date(0), updatedRoom.getCloseDatetime());
 		assertEquals("Username1", updatedRoom.getCustomer().getUsername());

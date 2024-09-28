@@ -57,6 +57,7 @@ public class UserRepositoryTest extends AbstractIntegrationTest {
 		assertEquals(1, persistedUser.getId());
 		assertEquals("ADM", persistedUser.getUsername());
 		assertEquals("ADM", persistedUser.getFullname());
+		assertEquals("Adm", persistedUser.getType().getDescription());
 		assertTrue(persistedUser.getAccountNonExpired());
 		assertTrue(persistedUser.getAccountNonLocked());
 		assertTrue(persistedUser.getCredentialsNonExpired());
@@ -87,6 +88,7 @@ public class UserRepositoryTest extends AbstractIntegrationTest {
 		assertEquals(1, userOne.getId());
 		assertEquals("ADM", userOne.getUsername());
 		assertEquals("ADM", userOne.getFullname());
+		assertEquals("Adm", userOne.getType().getDescription());
 		assertTrue(userOne.getAccountNonExpired());
 		assertTrue(userOne.getAccountNonLocked());
 		assertTrue(userOne.getCredentialsNonExpired());

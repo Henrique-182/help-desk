@@ -6,9 +6,10 @@ public class RoomCreationMock {
 	
 	public static RoomCreationVO vo() {
 		RoomCreationVO vo = new RoomCreationVO();
-		vo.setEmployeeKey(1L);
+		vo.setEmployeeKey(2L);
 		vo.setCustomerKey(3L);
 		vo.setSectorKey(2L);
+		vo.setPriority("NORMAL");
 				
 		return vo;
 	}

@@ -16,7 +16,9 @@ import br.com.hd.data.vo.chat.room.v1.RoomVO;
 import br.com.hd.exceptions.generic.v1.InvalidArgumentsException;
 import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
 import br.com.hd.mappers.chat.v1.RoomMapper;
+import br.com.hd.model.auth.v1.User;
 import br.com.hd.model.chat.room.v1.Room;
+import br.com.hd.model.chat.room.v1.RoomPriority;
 import br.com.hd.model.chat.room.v1.RoomStatus;
 import br.com.hd.model.chat.room.v1.SectorRoom;
 import br.com.hd.model.chat.room.v1.UserRoom;
@@ -79,6 +81,24 @@ public class RoomService {
 	}
 	
 	@Transactional
+	public List<RoomVO> findBySectorAndCustomerAndStatus(Long sectorId, Long customerId, List<RoomStatus> statusList) {
+		
+		util.sectorExists(sectorId);
+		
+		util.customerExists(customerId);
+		
+		List<RoomVO> voList = mapper
+				.toVOList(
+					roomRepository.findBySectorKeyAndCustomerKeyAndStatusIn(sectorId, customerId, statusList)
+				)
+				.stream()
+				.map(r -> addLinkSelfRel(r))
+				.toList();
+
+		return voList;
+	}
+	
+	@Transactional
 	public RoomVO createByCustomer(RoomCreationVO data) {
 		
 		Room room = new Room();
@@ -92,33 +112,57 @@ public class RoomService {
 		room.setStatus(RoomStatus.Open);
 		room.setCreateDatetime(new Date());
 		
+		RoomPriority priority = util.returnPriorityIfExists(data.getPriority());
+		room.setPriority(priority);
+		
 		Room createdRoom = roomRepository.save(room);
 		
 		return addLinkSelfRel(mapper.toVO(createdRoom));
 	}
 	
 	@Transactional
-	public RoomVO createByEmployee(RoomCreationVO data) {
+	public RoomVO createByEmployee(User currentUser, RoomCreationVO data) {
 		
-		if (data.getEmployeeKey() == data.getCustomerKey()) throw new InvalidArgumentsException("It is not possible to create the room. Employee and Customer are equal !");
+		if (currentUser.getId() == data.getCustomerKey()) throw new InvalidArgumentsException("It is not possible to create the room. Employee and Customer are equal !");
 		
 		Room room = new Room();
-		if (util.employeeExists(data.getEmployeeKey())) {
-			room.setEmployee(new UserRoom(data.getEmployeeKey()));
-		}
-		if (util.customerExists(data.getCustomerKey())) {
-			room.setCustomer(new UserRoom(data.getCustomerKey()));
-		}
-		if (util.sectorExists(data.getSectorKey())) {
-			room.setSector(new SectorRoom(data.getSectorKey()));
-		}
+		
+		room.setEmployee(
+			util.returnEmployeeIfExists(currentUser.getId())
+		);
+		room.setCustomer(
+			util.returnCustomerIfExists(data.getCustomerKey())
+		);
+		room.setSector(
+			util.returnSectorIfExists(data.getSectorKey())
+		);
+		
 		room.setCode(returnMaxRoomCode() + 1);
 		room.setStatus(RoomStatus.Chatting);
 		room.setCreateDatetime(new Date());
 		
-		Room createdRoom = roomRepository.save(room);
+		RoomPriority priority = util.returnPriorityIfExists(data.getPriority());
+		room.setPriority(priority);
 		
+		Room createdRoom = roomRepository.save(room);
+		 
 		return addLinkSelfRel(mapper.toVO(createdRoom));
+	}
+	
+	@Transactional
+	public RoomVO updateReasonAndSolutionAndPriority(Integer code, RoomUpdateVO data) {
+		
+		Room persistedRoom = roomRepository.findByCode(code)
+				.orElseThrow(() -> new ResourceNotFoundException("No records found for the code (" + code + ") !"));
+		
+		RoomPriority priority = util.returnPriorityIfExists(data.getPriority());
+		persistedRoom.setPriority(priority);
+		persistedRoom.setReason(data.getReason());
+		persistedRoom.setSolution(data.getSolution());		
+		
+		Room updatedRoom = roomRepository.save(persistedRoom);
+		
+		return addLinkSelfRel(mapper.toVO(updatedRoom));
 	}
 	
 	@Transactional
@@ -131,6 +175,8 @@ public class RoomService {
 		
 		if (data.getStatus() == RoomStatus.Closed) {
 			persistedRoom.setCloseDatetime(new Date());
+			persistedRoom.setReason(data.getReason());
+			persistedRoom.setSolution(data.getSolution());
 		}
 		
 		Room updatedRoom = roomRepository.save(persistedRoom);
@@ -139,24 +185,22 @@ public class RoomService {
 	}
 	
 	@Transactional
-	public RoomVO updateEmployeeAndStatusByCode(Integer code, RoomUpdateVO data) {
-		
+	public RoomVO employeeEnterRoomByCode(Integer code, User currentUser) {
+
 		Room persistedRoom = roomRepository.findByCode(code)
 				.orElseThrow(() -> new ResourceNotFoundException("No records found for the code (" + code + ") !"));
-		
-		if (util.employeeExists(data.getEmployeeKey())) {
-			persistedRoom.setEmployee(new UserRoom(data.getEmployeeKey()));
-		}
-		
-		persistedRoom.setStatus(data.getStatus());
-		
+
+		persistedRoom.setEmployee(new UserRoom(currentUser.getId()));
+
+		persistedRoom.setStatus(RoomStatus.Chatting);
+
 		Room updatedRoom = roomRepository.save(persistedRoom);
-		
+
 		return addLinkSelfRel(mapper.toVO(updatedRoom));
 	}
 	
 	@Transactional
-	public RoomVO updateEmployeeAndSectorAndStatusByCode(Integer code, RoomUpdateVO data) {
+	public RoomVO transferRoomByCode(Integer code, RoomUpdateVO data) {
 		
 		Room persistedRoom = roomRepository.findByCode(code)
 				.orElseThrow(() -> new ResourceNotFoundException("No records found for the code (" + code + ") !"));
@@ -169,7 +213,7 @@ public class RoomService {
 			persistedRoom.setSector(new SectorRoom((data.getSectorKey())));
 		}
 		
-		persistedRoom.setStatus(data.getStatus());
+		persistedRoom.setStatus(RoomStatus.Transferred);
 		
 		Room updatedRoom = roomRepository.save(persistedRoom);
 		

@@ -1,6 +1,6 @@
 package br.com.hd.unittests.mocks.chat.room.v1;
 
-import br.com.hd.model.auth.v1.UserType;
+import br.com.hd.integrationtests.mocks.auth.v1.UserTypeMock;
 import br.com.hd.model.chat.room.v1.UserRoom;
 
 public class UserRoomMock {
@@ -13,7 +13,7 @@ public class UserRoomMock {
 		UserRoom entity = new UserRoom();
 		entity.setKey(number);
 		entity.setUsername("Username" + number);
-		entity.setType(number % 2 == 0 ? UserType.Employee : UserType.Customer);
+		entity.setType(UserTypeMock.entity(number));
 		
 		return entity;
 	}

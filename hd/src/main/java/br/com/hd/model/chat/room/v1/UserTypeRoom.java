@@ -1,4 +1,4 @@
-package br.com.hd.model.auth.v1;
+package br.com.hd.model.chat.room.v1;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -12,8 +12,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(schema = "AUTH", name = "TB_USER_TYPE")
-public class UserType implements Serializable {
-
+public class UserTypeRoom implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -24,7 +24,7 @@ public class UserType implements Serializable {
 	@Column(name = "DESCRIPTION", nullable = false, unique = true)
 	private String description;
 
-	public UserType() {}
+	public UserTypeRoom() {}
 
 	public Long getKey() {
 		return key;
@@ -55,8 +55,8 @@ public class UserType implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UserType other = (UserType) obj;
+		UserTypeRoom other = (UserTypeRoom) obj;
 		return Objects.equals(description, other.description) && Objects.equals(key, other.key);
 	}
-
+	
 }

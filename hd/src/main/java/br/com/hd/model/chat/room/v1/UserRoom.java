@@ -7,6 +7,8 @@ import br.com.hd.model.auth.v1.UserType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,7 +24,8 @@ public class UserRoom implements Serializable {
 	@Column(name = "USERNAME", nullable = false, unique = true)
 	private String username;
 	
-	@Column(name = "USER_TYPE", nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "FK_USER_TYPE")
 	private UserType type;
 	
 	public UserRoom() {}

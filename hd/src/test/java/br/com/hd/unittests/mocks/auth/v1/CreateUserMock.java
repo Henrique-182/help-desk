@@ -1,7 +1,6 @@
 package br.com.hd.unittests.mocks.auth.v1;
 
 import br.com.hd.data.vo.auth.v1.CreateUserVO;
-import br.com.hd.model.auth.v1.UserType;
 
 public class CreateUserMock {
 	
@@ -14,7 +13,7 @@ public class CreateUserMock {
 		vo.setUsername("Username" + number);
 		vo.setFullname("Fullname" + number);
 		vo.setPassword("Password" + number);
-		vo.setType(number % 2 == 0 ? UserType.Employee : UserType.Customer);
+		vo.setType(UserTypeMock.entity(number));
 		
 		return vo;
 	}

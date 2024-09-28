@@ -56,7 +56,7 @@ public class MessageControllerTest extends AbstractIntegrationTest {
 		mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		
-		credentials = new AccountCredentialsVO("ADM", "ADMINISTRATOR#@!312");
+		credentials = new AccountCredentialsVO("MANAGER", "MANAGER#@!312");
 	}
 	
 	@Test
@@ -117,7 +117,7 @@ public class MessageControllerTest extends AbstractIntegrationTest {
 		assertEquals(10L, createdMessage.getKey());
 		assertEquals(MessageType.TEXT, createdMessage.getType());
 		assertEquals("Content4", createdMessage.getContent());
-		assertEquals(1, createdMessage.getUser().getKey());
+		assertEquals(2, createdMessage.getUser().getKey());
 		assertEquals(4, createdMessage.getRoom().getKey());
 		assertEquals(
 			new SimpleDateFormat("yyyy-MM-dd").format(new Date()), 
@@ -150,7 +150,7 @@ public class MessageControllerTest extends AbstractIntegrationTest {
 		assertEquals(10L, persistedMessage.getKey());
 		assertEquals(MessageType.TEXT, persistedMessage.getType());
 		assertEquals("Content4", persistedMessage.getContent());
-		assertEquals(1, persistedMessage.getUser().getKey());
+		assertEquals(2, persistedMessage.getUser().getKey());
 		assertEquals(4, persistedMessage.getRoom().getKey());
 		assertEquals(
 			new SimpleDateFormat("yyyy-MM-dd").format(new Date()), 
@@ -187,7 +187,7 @@ public class MessageControllerTest extends AbstractIntegrationTest {
 		assertEquals(10L, updatedMessage.getKey());
 		assertEquals(MessageType.TEXT, updatedMessage.getType());
 		assertEquals("10Content", updatedMessage.getContent());
-		assertEquals(1, updatedMessage.getUser().getKey());
+		assertEquals(2, updatedMessage.getUser().getKey());
 		assertEquals(4, updatedMessage.getRoom().getKey());
 		assertEquals(
 			new SimpleDateFormat("yyyy-MM-dd").format(new Date()), 
@@ -208,7 +208,6 @@ public class MessageControllerTest extends AbstractIntegrationTest {
 		
 		var content = given().spec(specification)
 				.pathParam("id", message.getKey())
-				.body(messageUpdate)
 				.when()
 					.delete("/{id}")
 				.then()
@@ -225,7 +224,7 @@ public class MessageControllerTest extends AbstractIntegrationTest {
 		assertEquals(10L, updatedMessage.getKey());
 		assertEquals(MessageType.TEXT, updatedMessage.getType());
 		assertEquals("10Content", updatedMessage.getContent());
-		assertEquals(1, updatedMessage.getUser().getKey());
+		assertEquals(2, updatedMessage.getUser().getKey());
 		assertEquals(4, updatedMessage.getRoom().getKey());
 		assertEquals(
 			new SimpleDateFormat("yyyy-MM-dd").format(new Date()), 
@@ -249,7 +248,6 @@ public class MessageControllerTest extends AbstractIntegrationTest {
 		
 		var content = given().spec(specification)
 				.pathParam("id", 1L)
-				.body(messageUpdate)
 				.when()
 					.delete("/{id}")
 				.then()
@@ -258,7 +256,7 @@ public class MessageControllerTest extends AbstractIntegrationTest {
 					.body()
 					.asString();
 		
-		assertTrue(content.contains("The user (ADM) can't delete the message because he didn't send it !"));
+		assertTrue(content.contains("The user (MANAGER) can't delete the message because he didn't send it !"));
 	}
 	
 }

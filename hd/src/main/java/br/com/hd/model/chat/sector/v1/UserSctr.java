@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 import br.com.hd.model.auth.v1.Permission;
-import br.com.hd.model.auth.v1.UserType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,16 +23,14 @@ public class UserSctr implements Serializable {
 	
 	@Id
 	@Column(name = "ID", nullable = false, unique = true)
-	private Long id;
+	private Long key;
 	
 	@Column(name = "USERNAME", nullable = false, unique = true)
 	private String username;
 	
-	@Column(name = "FULLNAME", nullable = false)
-	private String fullname;
-	
-	@Column(name = "USER_TYPE", nullable = false)
-	private UserType type;
+	@ManyToOne
+	@JoinColumn(name = "FK_USER_TYPE")
+	private UserTypeSctr type;
 	
 	@Column(name = "ENABLED", nullable = false)
 	private Boolean enabled;
@@ -48,12 +46,12 @@ public class UserSctr implements Serializable {
 
 	public UserSctr() {}
 
-	public Long getId() {
-		return id;
+	public Long getKey() {
+		return key;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setKey(Long key) {
+		this.key = key;
 	}
 
 	public String getUsername() {
@@ -63,20 +61,12 @@ public class UserSctr implements Serializable {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
-	public String getFullname() {
-		return fullname;
-	}
-
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
-	}
 	
-	public UserType getType() {
+	public UserTypeSctr getType() {
 		return type;
 	}
 
-	public void setType(UserType type) {
+	public void setType(UserTypeSctr type) {
 		this.type = type;
 	}
 
@@ -98,7 +88,7 @@ public class UserSctr implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(enabled, fullname, id, permissions, type, username);
+		return Objects.hash(enabled, key, permissions, type, username);
 	}
 
 	@Override
@@ -110,8 +100,8 @@ public class UserSctr implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		UserSctr other = (UserSctr) obj;
-		return Objects.equals(enabled, other.enabled) && Objects.equals(fullname, other.fullname)
-				&& Objects.equals(id, other.id) && Objects.equals(permissions, other.permissions) && type == other.type
+		return Objects.equals(enabled, other.enabled) && Objects.equals(key, other.key)
+				&& Objects.equals(permissions, other.permissions) && Objects.equals(type, other.type)
 				&& Objects.equals(username, other.username);
 	}
 

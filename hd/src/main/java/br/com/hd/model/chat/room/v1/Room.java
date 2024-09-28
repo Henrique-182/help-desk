@@ -33,11 +33,21 @@ public class Room implements Serializable {
 	@Column(name = "ROOM_STATUS", nullable = false)
 	private RoomStatus status;
 	
+	@Column(name = "REASON", nullable = true)
+	private String reason;
+	
+	@Column(name = "SOLUTION", nullable = true)
+	private String solution;
+	
 	@Column(name = "CREATE_DATETIME", nullable = false)
 	private Date createDatetime;
 	
 	@Column(name = "CLOSE_DATETIME", nullable = true)
 	private Date closeDatetime;
+	
+	@ManyToOne
+	@JoinColumn(name = "FK_ROOM_PRIORITY")
+	private RoomPriority priority;
 	
 	@ManyToOne
 	@JoinColumn(name = "FK_USER_CUSTOMER")
@@ -85,6 +95,22 @@ public class Room implements Serializable {
 		this.status = status;
 	}
 	
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public String getSolution() {
+		return solution;
+	}
+
+	public void setSolution(String solution) {
+		this.solution = solution;
+	}
+
 	public Date getCreateDatetime() {
 		return createDatetime;
 	}
@@ -99,6 +125,14 @@ public class Room implements Serializable {
 
 	public void setCloseDatetime(Date closeDatetime) {
 		this.closeDatetime = closeDatetime;
+	}
+	
+	public RoomPriority getPriority() {
+		return priority;
+	}
+
+	public void setPriority(RoomPriority priority) {
+		this.priority = priority;
 	}
 
 	public void setCustomer(UserRoom customer) {
@@ -131,7 +165,8 @@ public class Room implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(closeDatetime, code, createDatetime, customer, employee, id, messages, sector, status);
+		return Objects.hash(closeDatetime, code, createDatetime, customer, employee, id, messages, priority, reason,
+				sector, solution, status);
 	}
 
 	@Override
@@ -146,8 +181,9 @@ public class Room implements Serializable {
 		return Objects.equals(closeDatetime, other.closeDatetime) && Objects.equals(code, other.code)
 				&& Objects.equals(createDatetime, other.createDatetime) && Objects.equals(customer, other.customer)
 				&& Objects.equals(employee, other.employee) && Objects.equals(id, other.id)
-				&& Objects.equals(messages, other.messages) && Objects.equals(sector, other.sector)
-				&& status == other.status;
+				&& Objects.equals(messages, other.messages) && Objects.equals(priority, other.priority)
+				&& Objects.equals(reason, other.reason) && Objects.equals(sector, other.sector)
+				&& Objects.equals(solution, other.solution) && status == other.status;
 	}
 
 }

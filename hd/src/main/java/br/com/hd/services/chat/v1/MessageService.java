@@ -18,7 +18,6 @@ import br.com.hd.mappers.chat.v1.MessageMapper;
 import br.com.hd.model.auth.v1.User;
 import br.com.hd.model.chat.message.v1.Message;
 import br.com.hd.model.chat.message.v1.RoomMssg;
-import br.com.hd.model.chat.message.v1.UserMssg;
 import br.com.hd.repositories.chat.v1.MessageRepository;
 import br.com.hd.util.service.v1.ServiceUtil;
 import jakarta.transaction.Transactional;
@@ -51,9 +50,10 @@ public class MessageService {
 		if (util.roomExists(data.getRoomKey())) {
 			message.setRoom(new RoomMssg(data.getRoomKey()));
 		}
-		if (util.userPresentInRoom(currentUser.getId(), data.getRoomKey())) {
-			message.setUser(new UserMssg(currentUser.getId()));
-		}
+		
+		message.setUser(
+			util.returnUserIfPresentInRoom(currentUser.getId(), data.getRoomKey())
+		);
 
 		message.setType(data.getType());
 		message.setContent(data.getContent());

@@ -3,10 +3,11 @@ package br.com.hd.model.chat.message.v1;
 import java.io.Serializable;
 import java.util.Objects;
 
-import br.com.hd.model.auth.v1.UserType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,8 +23,9 @@ public class UserMssg implements Serializable {
 	@Column(name = "USERNAME", nullable = false, unique = true)
 	private String username;
 	
-	@Column(name = "USER_TYPE", nullable = false)
-	private UserType type;
+	@ManyToOne
+	@JoinColumn(name = "FK_USER_TYPE")
+	private UserTypeMssg type;
 	
 	public UserMssg() {}
 	
@@ -47,11 +49,11 @@ public class UserMssg implements Serializable {
 		this.username = username;
 	}
 
-	public UserType getType() {
+	public UserTypeMssg getType() {
 		return type;
 	}
 
-	public void setType(UserType type) {
+	public void setType(UserTypeMssg type) {
 		this.type = type;
 	}
 

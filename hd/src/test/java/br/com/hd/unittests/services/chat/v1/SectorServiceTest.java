@@ -26,12 +26,13 @@ import br.com.hd.exceptions.generic.v1.RequiredObjectIsNullException;
 import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
 import br.com.hd.mappers.chat.v1.SectorMapper;
 import br.com.hd.model.auth.v1.User;
-import br.com.hd.model.auth.v1.UserType;
 import br.com.hd.model.chat.sector.v1.Sector;
+import br.com.hd.model.chat.sector.v1.UserSctr;
 import br.com.hd.repositories.chat.v1.SectorRepository;
 import br.com.hd.services.chat.v1.SectorService;
 import br.com.hd.unittests.mocks.auth.v1.UserMock;
 import br.com.hd.unittests.mocks.chat.sector.v1.SectorMock;
+import br.com.hd.unittests.mocks.chat.sector.v1.UserSctrMock;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
@@ -64,14 +65,14 @@ public class SectorServiceTest {
 		
 		assertEquals(1, persistedSector.getKey());
 		assertEquals("Description1", persistedSector.getDescription());
-		assertEquals(UserType.Customer, persistedSector.getCustomers().get(0).getType());
-		assertEquals(UserType.Employee, persistedSector.getEmployees().get(0).getType());
+		assertEquals("Customer", persistedSector.getCustomers().get(0).getType().getDescription());
+		assertEquals("Employee", persistedSector.getEmployees().get(0).getType().getDescription());
 		
 		assertTrue(persistedSector.getLinks().toString().contains("</v1/sector?pageNumber=0&pageSize=10&sortBy=description&direction=asc>;rel=\"sectorVOList\""));
 	}
 	
 	@Test
-	void testFindByIdWithResourceNotFoundException() {
+	void testFindById_WithResourceNotFoundException() {
 		Long id = 10L;
 		
 		Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
@@ -83,6 +84,40 @@ public class SectorServiceTest {
 		
 		assertEquals(expectedMessage, actualMessage);
 	}
+	
+	@Test
+	void testFindUsersByType() {
+		
+		String type = "Employee";
+		
+		Long id = 0L;
+		
+		UserSctr mockEntity = UserSctrMock.entity(id);
+		UserSctr mockEntity2 = UserSctrMock.entity(id + 2);
+		
+		List<UserSctr> mockEntityList = List.of(mockEntity, mockEntity2);
+		
+		when(repository.findByType(type)).thenReturn(mockEntityList);
+		
+		List<UserSctr> users = service.findUsersByType(type);
+		
+		assertNotNull(users);
+		
+		UserSctr userZero = users.get(0);
+		
+		assertEquals(0, userZero.getKey());
+		assertEquals("Username0", userZero.getUsername());
+		assertEquals("Employee", userZero.getType().getDescription());
+		assertEquals(true, userZero.getEnabled());
+		
+		UserSctr userOne = users.get(1);
+		
+		assertEquals(2, userOne.getKey());
+		assertEquals("Username2", userOne.getUsername());
+		assertEquals("Employee", userOne.getType().getDescription());
+		assertEquals(true, userOne.getEnabled());
+	}
+	
 	
 	@Test
 	void testFindSectorsByUserEmployee() {
@@ -159,14 +194,14 @@ public class SectorServiceTest {
 		
 		assertEquals(0, createdSector.getKey());
 		assertEquals("Description0", createdSector.getDescription());
-		assertEquals(UserType.Customer, createdSector.getCustomers().get(0).getType());
-		assertEquals(UserType.Employee, createdSector.getEmployees().get(0).getType());
+		assertEquals("Customer", createdSector.getCustomers().get(0).getType().getDescription());
+		assertEquals("Employee", createdSector.getEmployees().get(0).getType().getDescription());
 		
 		assertTrue(createdSector.getLinks().toString().contains("</v1/sector?pageNumber=0&pageSize=10&sortBy=description&direction=asc>;rel=\"sectorVOList\""));
 	}
 	
 	@Test
-	void testCreateWithRequiredObjectIsNullException() {
+	void testCreate_WithRequiredObjectIsNullException() {
 		Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
 			service.create(null);
 		});
@@ -196,14 +231,14 @@ public class SectorServiceTest {
 		
 		assertEquals(2, updatedSector.getKey());
 		assertEquals("2Description", updatedSector.getDescription());
-		assertEquals(UserType.Customer, updatedSector.getCustomers().get(0).getType());
-		assertEquals(UserType.Employee, updatedSector.getEmployees().get(0).getType());
+		assertEquals("Customer", updatedSector.getCustomers().get(0).getType().getDescription());
+		assertEquals("Employee", updatedSector.getEmployees().get(0).getType().getDescription());
 		
 		assertTrue(updatedSector.getLinks().toString().contains("</v1/sector?pageNumber=0&pageSize=10&sortBy=description&direction=asc>;rel=\"sectorVOList\""));
 	}
 	
 	@Test
-	void testUpdateByIdWithResourceNotFoundException() {
+	void testUpdateById_WithResourceNotFoundException() {
 		Long id = 10L;
 		SectorVO mockVO = SectorMock.vo();
 		
@@ -218,7 +253,7 @@ public class SectorServiceTest {
 	}
 	
 	@Test
-	void testUpdateByIdWithRequiredObjectIsNullException() {
+	void testUpdateById_WithRequiredObjectIsNullException() {
 		Long id = 1L;
 		SectorVO mockVO = null;
 		
@@ -242,7 +277,7 @@ public class SectorServiceTest {
 	}
 	
 	@Test
-	void testDeleteByIdWithResourceNotFoundException() {
+	void testDeleteById_WithResourceNotFoundException() {
 		Long id = 10L;
 		
 		Exception exception = assertThrows(ResourceNotFoundException.class, () -> {

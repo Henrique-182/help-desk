@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import br.com.hd.model.auth.v1.Permission;
+import br.com.hd.model.auth.v1.UserType;
 
 public class UserVO implements Serializable {
 
@@ -13,6 +14,7 @@ public class UserVO implements Serializable {
 	private Integer key;
 	private String username;
 	private String fullname;
+	private UserType type;
 	private Boolean accountNonExpired;
 	private Boolean accountNonLocked;
 	private Boolean credentialsNonExpired;
@@ -43,6 +45,14 @@ public class UserVO implements Serializable {
 
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
+	}
+	
+	public UserType getType() {
+		return type;
+	}
+
+	public void setType(UserType type) {
+		this.type = type;
 	}
 
 	public Boolean getAccountNonExpired() {
@@ -87,18 +97,15 @@ public class UserVO implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(accountNonExpired, accountNonLocked, credentialsNonExpired, enabled,
-				fullname, key, permissions, username);
-		return result;
+		return Objects.hash(accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, fullname, key,
+				permissions, type, username);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
+		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -108,7 +115,7 @@ public class UserVO implements Serializable {
 				&& Objects.equals(credentialsNonExpired, other.credentialsNonExpired)
 				&& Objects.equals(enabled, other.enabled) && Objects.equals(fullname, other.fullname)
 				&& Objects.equals(key, other.key) && Objects.equals(permissions, other.permissions)
-				&& Objects.equals(username, other.username);
+				&& Objects.equals(type, other.type) && Objects.equals(username, other.username);
 	}
-	
+
 }

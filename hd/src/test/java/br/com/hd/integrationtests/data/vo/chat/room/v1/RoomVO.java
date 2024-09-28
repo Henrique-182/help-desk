@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 import br.com.hd.model.chat.room.v1.MessageRoom;
+import br.com.hd.model.chat.room.v1.RoomPriority;
 import br.com.hd.model.chat.room.v1.RoomStatus;
 import br.com.hd.model.chat.room.v1.SectorRoom;
 import br.com.hd.model.chat.room.v1.UserRoom;
@@ -17,8 +18,11 @@ public class RoomVO implements Serializable {
 	private Long key;
 	private Integer code;
 	private RoomStatus status;
+	private String reason;
+	private String solution;
 	private Date createDatetime;
 	private Date closeDatetime;
+	private RoomPriority priority;
 	private UserRoom customer;
 	private UserRoom employee;
 	private SectorRoom sector;
@@ -50,6 +54,22 @@ public class RoomVO implements Serializable {
 		this.status = status;
 	}
 	
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public String getSolution() {
+		return solution;
+	}
+
+	public void setSolution(String solution) {
+		this.solution = solution;
+	}
+
 	public Date getCreateDatetime() {
 		return createDatetime;
 	}
@@ -64,6 +84,14 @@ public class RoomVO implements Serializable {
 
 	public void setCloseDatetime(Date closeDatetime) {
 		this.closeDatetime = closeDatetime;
+	}
+	
+	public RoomPriority getPriority() {
+		return priority;
+	}
+
+	public void setPriority(RoomPriority priority) {
+		this.priority = priority;
 	}
 
 	public UserRoom getCustomer() {
@@ -100,7 +128,8 @@ public class RoomVO implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(closeDatetime, code, createDatetime, customer, employee, key, messages, sector, status);
+		return Objects.hash(closeDatetime, code, createDatetime, customer, employee, key, messages, priority, reason,
+				sector, solution, status);
 	}
 
 	@Override
@@ -115,8 +144,9 @@ public class RoomVO implements Serializable {
 		return Objects.equals(closeDatetime, other.closeDatetime) && Objects.equals(code, other.code)
 				&& Objects.equals(createDatetime, other.createDatetime) && Objects.equals(customer, other.customer)
 				&& Objects.equals(employee, other.employee) && Objects.equals(key, other.key)
-				&& Objects.equals(messages, other.messages) && Objects.equals(sector, other.sector)
-				&& status == other.status;
+				&& Objects.equals(messages, other.messages) && Objects.equals(priority, other.priority)
+				&& Objects.equals(reason, other.reason) && Objects.equals(sector, other.sector)
+				&& Objects.equals(solution, other.solution) && status == other.status;
 	}
 
 }

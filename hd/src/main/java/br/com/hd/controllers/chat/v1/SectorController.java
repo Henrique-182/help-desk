@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.hd.data.vo.chat.sector.v1.SectorVO;
 import br.com.hd.data.vo.chat.sector.v1.SimpleSectorVO;
 import br.com.hd.data.vo.chat.sector.v1.SimpleSectorWrapperVO;
+import br.com.hd.data.vo.chat.sector.v1.UserSctrWrapperVO;
 import br.com.hd.model.auth.v1.User;
 import br.com.hd.services.chat.v1.SectorService;
 import br.com.hd.util.controller.v1.ControllerUtil;
@@ -105,6 +106,26 @@ public class SectorController {
 	}
 	
 	@Operation(
+		summary = "Finds Users",
+		description = "Finds Users By Type",
+		tags = "User",
+		responses = {
+			@ApiResponse(description = "Success", responseCode = "200", content = @Content(schema = @Schema(implementation = UserSctrWrapperVO.class))),
+			@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+			@ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+			@ApiResponse(description = "Interval Server Error", responseCode = "500", content = @Content)
+		}
+	)
+	@GetMapping(path = "/byType/{type}")
+	public UserSctrWrapperVO findUsersByType(@PathVariable("type") String type) {
+		
+		return new UserSctrWrapperVO(service.findUsersByType(type));
+	}
+	
+	@Operation(
 		summary = "Finds Sectors",
 		description = "Finds Sectors by User",
 		tags = {"Sector"},
@@ -129,7 +150,36 @@ public class SectorController {
 		
 		User currentUser = util.findUserByContext(SecurityContextHolder.getContext());
 		
-		return new SimpleSectorWrapperVO(service.findSectorsByUser(currentUser));
+		return new SimpleSectorWrapperVO(
+				service.findSectorsByUser(currentUser), 
+				currentUser.getType().getDescription()
+			);
+	}
+	
+	@Operation(
+		summary = "Finds Sectors",
+		description = "Finds Users by Sectors",
+		tags = {"Sector"},
+		responses = {
+			@ApiResponse(
+				description = "Success", 
+				responseCode = "200", 
+				content = @Content(
+					mediaType = "application/json",
+					array = @ArraySchema(schema = @Schema(implementation = UserSctrWrapperVO.class)))
+			),
+			@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+			@ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+			@ApiResponse(description = "Interval Server Error", responseCode = "500", content = @Content),
+		}
+	)	
+	@GetMapping(path = "/bySector/{type}/{id}")
+	public UserSctrWrapperVO findUsersBySector(@PathVariable("type") String type, @PathVariable("id") Long id) {
+		
+		return new UserSctrWrapperVO(service.findUsersBySector(type, id));
 	}
 	
 	@Operation(

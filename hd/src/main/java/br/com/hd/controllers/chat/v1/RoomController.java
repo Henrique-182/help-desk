@@ -127,6 +127,39 @@ public class RoomController {
 	}
 	
 	@Operation(
+		summary = "Finds a Room",
+		description = "Finds a Room by Sector, Customer and Status",
+		tags = {"Room"},
+		responses = {
+			@ApiResponse(description = "Success", responseCode = "200", content = @Content(schema = @Schema(implementation = RoomWrapperVO.class))),
+			@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+			@ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+			@ApiResponse(description = "Interval Server Error", responseCode = "500", content = @Content),
+		}
+	)
+	@GetMapping(path = "/bySectorAndCustomerAndStatus/{sectorId}")
+	public RoomWrapperVO findBySectorAndCustomerAndStatus(
+		@PathVariable("sectorId") Long sectorId,
+		@RequestParam(name = "status1", required = true, defaultValue = "") RoomStatus status1,
+		@RequestParam(name = "status2", required = false, defaultValue = "") RoomStatus status2,
+		@RequestParam(name = "status3", required = false, defaultValue = "") RoomStatus status3,
+		@RequestParam(name = "status4", required = false, defaultValue = "") RoomStatus status4,
+		@RequestParam(name = "status5", required = false, defaultValue = "") RoomStatus status5
+	) {
+		
+		List<RoomStatus> statusList = returnStatusList(status1, status2, status3, status4, status5);
+		
+		User currentUser = util.findUserByContext(SecurityContextHolder.getContext());
+		
+		List<RoomVO> rooms = service.findBySectorAndCustomerAndStatus(sectorId, currentUser.getId(), statusList);
+		
+		return new RoomWrapperVO(rooms);
+	}
+	
+	@Operation(
 		summary = "Creates a Room",
 		description = "Creates a Room by Customer",
 		tags = {"Room"},
@@ -157,7 +190,29 @@ public class RoomController {
 	)
 	@PostMapping("/byEmployee")
 	public RoomVO createByEmployee(@Valid @RequestBody RoomCreationVO data) {
-		return service.createByEmployee(data);
+
+		User currentUser = util.findUserByContext(SecurityContextHolder.getContext());
+		
+		return service.createByEmployee(currentUser, data);
+	}
+	
+	@Operation(
+		summary = "Updates a Room",
+		description = "Updates Room's Reason, Solution and Priority by Code",
+		tags = {"Room"},
+		responses = {
+			@ApiResponse(description = "Updated", responseCode = "200", content = @Content(schema = @Schema(implementation = RoomVO.class))),
+			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+			@ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
+			@ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+			@ApiResponse(description = "Interval Server Error", responseCode = "500", content = @Content),
+		}
+	)
+	@PatchMapping("/reasonAndSolutionAndPriority/{code}")
+	public RoomVO updateReasonAndSolutionAndPriority(@PathVariable("code") Integer code, @Valid @RequestBody RoomUpdateVO data) {
+		
+		return service.updateReasonAndSolutionAndPriority(code, data);
 	}
 	
 	@Operation(
@@ -192,10 +247,12 @@ public class RoomController {
 			@ApiResponse(description = "Interval Server Error", responseCode = "500", content = @Content),
 		}
 	)
-	@PatchMapping("/employeeAndStatus/{code}")
-	public RoomVO updateEmployeeAndStatusByCode(@PathVariable("code") Integer code, @Valid @RequestBody RoomUpdateVO data) {
+	@PatchMapping("/enterRoom/{code}")
+	public RoomVO employeeEnterRoomByCode(@PathVariable("code") Integer code) {
+
+		User currentUser = util.findUserByContext(SecurityContextHolder.getContext());
 		
-		return service.updateEmployeeAndStatusByCode(code, data);
+		return service.employeeEnterRoomByCode(code, currentUser);
 	}
 	
 	@Operation(
@@ -211,10 +268,10 @@ public class RoomController {
 			@ApiResponse(description = "Interval Server Error", responseCode = "500", content = @Content),
 		}
 	)
-	@PatchMapping("/employeeAndSectorAndStatus/{code}")
-	public RoomVO updateEmployeeAndSectorStatusByCode(@PathVariable("code") Integer code, @Valid @RequestBody RoomUpdateVO data) {
+	@PatchMapping("/transferRoom/{code}")
+	public RoomVO transferRoomByCode(@PathVariable("code") Integer code, @RequestBody RoomUpdateVO data) {
 		
-		return service.updateEmployeeAndSectorAndStatusByCode(code, data);
+		return service.transferRoomByCode(code, data);
 	}
 	
 	@Operation(

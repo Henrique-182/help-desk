@@ -1,6 +1,7 @@
 package br.com.hd.integrationtests.repositories.chat.v1;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -42,17 +43,20 @@ public class RoomRepositoryTest extends AbstractIntegrationTest {
 		
 		assertEquals(4L, persistedEntity.getId());
 		assertEquals(4, persistedEntity.getCode());
-		assertEquals(RoomStatus.Chatting, persistedEntity.getStatus());
+		assertEquals(RoomStatus.Closed, persistedEntity.getStatus());
+		assertEquals("Normal", persistedEntity.getPriority().getDescription());
+		assertEquals("Cliente solicitou ajuda em....", persistedEntity.getReason());
+		assertEquals("Cliente ajudado no quesito...", persistedEntity.getSolution());
 		assertEquals("COMMON_USER", persistedEntity.getCustomer().getUsername());
-		assertEquals("ADM", persistedEntity.getEmployee().getUsername());
-		assertEquals("Sector A", persistedEntity.getSector().getDescription());
+		assertEquals("MANAGER", persistedEntity.getEmployee().getUsername());
+		assertEquals("Sector B", persistedEntity.getSector().getDescription());
 	}
 	
 	@Test
 	@Order(2)
 	void testCountByUserKeyAndRoomKey() {
 		
-		Long employeeKey = 1L;
+		Long employeeKey = 2L;
 		Long roomKey = 4L;
 		
 		long count = repository.countByUserKeyAndRoomKey(employeeKey, roomKey);
@@ -81,19 +85,25 @@ public class RoomRepositoryTest extends AbstractIntegrationTest {
 		assertEquals(1L, roomZero.getId());
 		assertEquals(1, roomZero.getCode());
 		assertEquals(RoomStatus.Transferred, roomZero.getStatus());
+		assertEquals("Normal", roomZero.getPriority().getDescription());
+		assertNull(roomZero.getReason());
+		assertNull(roomZero.getSolution());
 		assertEquals("COMMON_USER", roomZero.getCustomer().getUsername());
-		assertEquals("ADM", roomZero.getEmployee().getUsername());
+		assertEquals("MANAGER", roomZero.getEmployee().getUsername());
 		assertEquals("Sector A", roomZero.getSector().getDescription());
 		
 		Room roomOne = entityList.get(1);
 		
 		assertNotNull(roomOne);
 		
-		assertEquals(4L, roomOne.getId());
-		assertEquals(4, roomOne.getCode());
+		assertEquals(3L, roomOne.getId());
+		assertEquals(3, roomOne.getCode());
 		assertEquals(RoomStatus.Chatting, roomOne.getStatus());
+		assertEquals("Normal", roomOne.getPriority().getDescription());
+		assertNull(roomOne.getReason());
+		assertNull(roomOne.getSolution());
 		assertEquals("COMMON_USER", roomOne.getCustomer().getUsername());
-		assertEquals("ADM", roomOne.getEmployee().getUsername());
+		assertEquals("MANAGER", roomOne.getEmployee().getUsername());
 		assertEquals("Sector A", roomOne.getSector().getDescription());
 	}
 	
@@ -113,9 +123,12 @@ public class RoomRepositoryTest extends AbstractIntegrationTest {
 		
 		assertNotNull(roomZero);
 		
-		assertEquals(3L, roomZero.getId());
-		assertEquals(3, roomZero.getCode());
+		assertEquals(4L, roomZero.getId());
+		assertEquals(4, roomZero.getCode());
 		assertEquals(RoomStatus.Closed, roomZero.getStatus());
+		assertEquals("Normal", roomZero.getPriority().getDescription());
+		assertEquals("Cliente solicitou ajuda em....", roomZero.getReason());
+		assertEquals("Cliente ajudado no quesito...", roomZero.getSolution());
 		assertEquals("COMMON_USER", roomZero.getCustomer().getUsername());
 		assertEquals("MANAGER", roomZero.getEmployee().getUsername());
 		assertEquals("Sector B", roomZero.getSector().getDescription());

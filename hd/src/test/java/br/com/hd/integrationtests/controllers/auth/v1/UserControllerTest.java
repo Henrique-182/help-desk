@@ -114,6 +114,7 @@ public class UserControllerTest extends AbstractIntegrationTest {
 		assertEquals(4, createdUser.getKey());
 		assertEquals("Username0", createdUser.getUsername());
 		assertEquals("Fullname0", createdUser.getFullname());
+		assertEquals("Employee", createdUser.getType().getDescription());
 		assertTrue(createdUser.getAccountNonExpired());
 		assertTrue(createdUser.getAccountNonLocked());
 		assertTrue(createdUser.getCredentialsNonExpired());
@@ -169,6 +170,7 @@ public class UserControllerTest extends AbstractIntegrationTest {
 		assertEquals(4, persistedUser.getKey());
 		assertEquals("Username0", persistedUser.getUsername());
 		assertEquals("Fullname0", persistedUser.getFullname());
+		assertEquals("Employee", persistedUser.getType().getDescription());
 		assertTrue(persistedUser.getAccountNonExpired());
 		assertTrue(persistedUser.getAccountNonLocked());
 		assertTrue(persistedUser.getCredentialsNonExpired());
@@ -202,6 +204,7 @@ public class UserControllerTest extends AbstractIntegrationTest {
 		assertEquals(4, updatedUser.getKey());
 		assertEquals("Username0", updatedUser.getUsername());
 		assertEquals("Fullname0", updatedUser.getFullname());
+		assertEquals("Employee", updatedUser.getType().getDescription());
 		assertTrue(updatedUser.getAccountNonExpired());
 		assertTrue(updatedUser.getAccountNonLocked());
 		assertTrue(updatedUser.getCredentialsNonExpired());
@@ -243,6 +246,7 @@ public class UserControllerTest extends AbstractIntegrationTest {
 		assertEquals(1, userOne.getKey());
 		assertEquals("ADM", userOne.getUsername());
 		assertEquals("ADM", userOne.getFullname());
+		assertEquals("Adm", userOne.getType().getDescription());
 		assertTrue(userOne.getAccountNonExpired());
 		assertTrue(userOne.getAccountNonLocked());
 		assertTrue(userOne.getCredentialsNonExpired());
@@ -254,6 +258,7 @@ public class UserControllerTest extends AbstractIntegrationTest {
 		assertEquals(4, userTwo.getKey());
 		assertEquals("Username0", userTwo.getUsername());
 		assertEquals("Fullname0", userTwo.getFullname());
+		assertEquals("Employee", userTwo.getType().getDescription());
 		assertTrue(userTwo.getAccountNonExpired());
 		assertTrue(userTwo.getAccountNonLocked());
 		assertTrue(userTwo.getCredentialsNonExpired());

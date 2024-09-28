@@ -18,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -40,7 +41,8 @@ public class User implements Serializable, UserDetails {
 	@Column(name = "PASSWORD", nullable = false)
 	private String password;
 	
-	@Column(name = "USER_TYPE", nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "FK_USER_TYPE")
 	private UserType type;
 	
 	@Column(name = "ACCOUNT_NON_EXPIRED", nullable = false)
