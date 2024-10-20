@@ -46,9 +46,11 @@ import io.restassured.specification.RequestSpecification;
 public class RoomControllerTest extends AbstractIntegrationTest {
 	
 	private static RequestSpecification specification;
+	private static RequestSpecification specification2;
 	private static ObjectMapper mapper;
 	
 	private static AccountCredentialsVO credentials;
+	private static AccountCredentialsVO credentials2;
 	private static RoomVO room;
 	private static RoomVO room2;
 	private static RoomCreationVO roomCreation;
@@ -59,6 +61,7 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		
 		credentials = new AccountCredentialsVO("MANAGER", "MANAGER#@!312");
+		credentials2 = new AccountCredentialsVO("COMMON_USER", "COMMON_USER#@!312"); 
 	}
 	
 	@Test
@@ -97,11 +100,46 @@ public class RoomControllerTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
+	@Order(0)
+	void testAuthentication2() {
+		
+		TokenVO tokenVO = given()
+				.basePath("/v1/auth/signin")
+				.port(TestConfigs.SERVER_PORT)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.body(credentials2)
+				.when()
+					.post()
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+					.as(TokenVO.class);
+		
+		assertNotNull(tokenVO);
+		assertNotNull(tokenVO.getUsername());
+		assertNotNull(tokenVO.getAuthenticated());
+		assertNotNull(tokenVO.getCreated());
+		assertNotNull(tokenVO.getExpiration());
+		assertNotNull(tokenVO.getAccessToken());
+		assertNotNull(tokenVO.getRefreshToken());
+		
+		specification2 = new RequestSpecBuilder()
+				.setBasePath("/v1/room")
+				.setPort(TestConfigs.SERVER_PORT)
+				.setContentType(TestConfigs.CONTENT_TYPE_JSON)
+				.addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + tokenVO.getAccessToken())
+				.addFilter(new RequestLoggingFilter(LogDetail.ALL))
+				.addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+				.build();
+	}
+	
+	@Test
 	@Order(1)
 	void testCreateByCustomer() throws JsonMappingException, JsonProcessingException {
 		roomCreation = RoomCreationMock.vo();
 		
-		var content = given().spec(specification)
+		var content = given().spec(specification2)
 				.body(roomCreation)
 				.when()
 					.post("/byCustomer")

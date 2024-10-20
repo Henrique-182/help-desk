@@ -5,9 +5,12 @@ import org.springframework.stereotype.Service;
 
 import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
 import br.com.hd.mappers.auth.v1.UserMapper;
+import br.com.hd.mappers.chat.v1.MessageMapper;
 import br.com.hd.mappers.chat.v1.SectorMapper;
 import br.com.hd.model.auth.v1.User;
+import br.com.hd.model.chat.message.v1.RoomMssg;
 import br.com.hd.model.chat.message.v1.UserMssg;
+import br.com.hd.model.chat.room.v1.Room;
 import br.com.hd.model.chat.room.v1.RoomPriority;
 import br.com.hd.model.chat.room.v1.SectorRoom;
 import br.com.hd.model.chat.room.v1.UserRoom;
@@ -33,6 +36,9 @@ public class ServiceUtil {
 	
 	@Autowired
 	private SectorMapper sectorMapper;
+	
+	@Autowired
+	private MessageMapper messageMapper;
 	
 	public RoomPriority returnPriorityIfExists(String priorityDescription) {
 		
@@ -112,6 +118,14 @@ public class ServiceUtil {
 				.orElseThrow(() -> new ResourceNotFoundException("No sector found for the key (" + sectorKey + ") !"));
 		
 		return sectorMapper.toSectorRoom(sector);
+	}
+	
+	public RoomMssg returnRoomIfExists(Long roomKey) {
+		
+		Room room = roomRepository.findById(roomKey)
+				.orElseThrow(() -> new ResourceNotFoundException("No room found for the key (" + roomKey + ") !"));
+		
+		return messageMapper.toRoomMssg(room);
 	}
 	
 	public UserMssg returnUserIfPresentInRoom(Long userKey, Long roomKey) {

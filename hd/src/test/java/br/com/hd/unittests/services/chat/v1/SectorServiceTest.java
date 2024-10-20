@@ -86,6 +86,39 @@ public class SectorServiceTest {
 	}
 	
 	@Test
+	void testFindUsersBySector() {
+		
+		String type = "Employee";
+		
+		Long id = 0L;
+		
+		UserSctr mockEntity = UserSctrMock.entity(id);
+		UserSctr mockEntity2 = UserSctrMock.entity(id + 2);
+		
+		List<UserSctr> mockEntityList = List.of(mockEntity, mockEntity2);
+		
+		when(repository.findEmployeesBySector(id)).thenReturn(mockEntityList);
+		
+		List<UserSctr> users = service.findUsersBySector(type, id);
+		
+		assertNotNull(users);
+		
+		UserSctr userZero = users.get(0);
+		
+		assertEquals(0, userZero.getKey());
+		assertEquals("Username0", userZero.getUsername());
+		assertEquals("Employee", userZero.getType().getDescription());
+		assertEquals(true, userZero.getEnabled());
+		
+		UserSctr userOne = users.get(1);
+		
+		assertEquals(2, userOne.getKey());
+		assertEquals("Username2", userOne.getUsername());
+		assertEquals("Employee", userOne.getType().getDescription());
+		assertEquals(true, userOne.getEnabled());
+	}
+	
+	@Test
 	void testFindUsersByType() {
 		
 		String type = "Employee";
@@ -117,7 +150,6 @@ public class SectorServiceTest {
 		assertEquals("Employee", userOne.getType().getDescription());
 		assertEquals(true, userOne.getEnabled());
 	}
-	
 	
 	@Test
 	void testFindSectorsByUserEmployee() {

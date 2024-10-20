@@ -99,20 +99,20 @@ public class RoomService {
 	}
 	
 	@Transactional
-	public RoomVO createByCustomer(RoomCreationVO data) {
+	public RoomVO createByCustomer(User currentUser, RoomCreationVO data) {
 		
 		Room room = new Room();
-		if (util.customerExists(data.getCustomerKey())) {
-			room.setCustomer(new UserRoom(data.getCustomerKey()));
-		}
-		if (util.sectorExists(data.getSectorKey())) {
-			room.setSector(new SectorRoom(data.getSectorKey()));
-		}
+		room.setCustomer(
+			util.returnCustomerIfExists(currentUser.getId())
+		);
+		room.setSector(
+			util.returnSectorIfExists(data.getSectorKey())
+		);
 		room.setCode(returnMaxRoomCode() + 1);
 		room.setStatus(RoomStatus.Open);
 		room.setCreateDatetime(new Date());
 		
-		RoomPriority priority = util.returnPriorityIfExists(data.getPriority());
+		RoomPriority priority = util.returnPriorityIfExists("Normal");
 		room.setPriority(priority);
 		
 		Room createdRoom = roomRepository.save(room);

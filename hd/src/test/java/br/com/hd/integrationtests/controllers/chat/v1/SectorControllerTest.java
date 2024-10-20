@@ -221,6 +221,34 @@ public class SectorControllerTest extends AbstractIntegrationTest {
 	
 	@Test
 	@Order(6)
+	void testFindUsersBySector() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.pathParam("type", "Employee")
+				.pathParam("id", 1L)
+				.when()
+				.get("/bySector/{type}/{id}")
+				.then()
+				.statusCode(200)
+				.extract()
+				.body()
+				.asString();
+		
+		UserSctrWrapperVO wrapper = mapper.readValue(content, UserSctrWrapperVO.class);
+		
+		List<UserSctr> list = wrapper.getUsers();
+		
+		UserSctr userZero = list.get(0);
+		
+		assertEquals(2, userZero.getKey());
+		assertEquals("MANAGER", userZero.getUsername());
+		assertEquals("Employee", userZero.getType().getDescription());
+		assertEquals(true, userZero.getEnabled());
+		assertEquals("MANAGER", userZero.getPermissions().get(0).getDescription());
+	}
+	
+	@Test
+	@Order(7)
 	void testFindUsersByType() throws JsonMappingException, JsonProcessingException {
 		
 		var content = given().spec(specification)
@@ -247,7 +275,7 @@ public class SectorControllerTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
-	@Order(7)
+	@Order(8)
 	void testFindSectorsByUser() throws JsonMappingException, JsonProcessingException {
 		
 		var content = given().spec(specification)
@@ -279,7 +307,7 @@ public class SectorControllerTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
-	@Order(8)
+	@Order(9)
 	void testHATEOAS() throws JsonMappingException, JsonProcessingException {
 		
 		var content = given().spec(specification)

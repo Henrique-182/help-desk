@@ -17,7 +17,6 @@ import br.com.hd.exceptions.generic.v1.ResourceNotFoundException;
 import br.com.hd.mappers.chat.v1.MessageMapper;
 import br.com.hd.model.auth.v1.User;
 import br.com.hd.model.chat.message.v1.Message;
-import br.com.hd.model.chat.message.v1.RoomMssg;
 import br.com.hd.repositories.chat.v1.MessageRepository;
 import br.com.hd.util.service.v1.ServiceUtil;
 import jakarta.transaction.Transactional;
@@ -47,9 +46,9 @@ public class MessageService {
 		
 		Message message = new Message();
 		
-		if (util.roomExists(data.getRoomKey())) {
-			message.setRoom(new RoomMssg(data.getRoomKey()));
-		}
+		message.setRoom(
+			util.returnRoomIfExists(data.getRoomKey())
+		);
 		
 		message.setUser(
 			util.returnUserIfPresentInRoom(currentUser.getId(), data.getRoomKey())

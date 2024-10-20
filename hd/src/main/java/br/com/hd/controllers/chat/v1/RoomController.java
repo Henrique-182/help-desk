@@ -173,7 +173,10 @@ public class RoomController {
 	)
 	@PostMapping("/byCustomer")
 	public RoomVO createByCustomer(@Valid @RequestBody RoomCreationVO data) {
-		return service.createByCustomer(data);
+		
+		User currentUser = util.findUserByContext(SecurityContextHolder.getContext());
+		
+		return service.createByCustomer(currentUser, data);
 	}
 	
 	@Operation(

@@ -36,6 +36,8 @@ import br.com.hd.unittests.mocks.auth.v1.UserMock;
 import br.com.hd.unittests.mocks.chat.message.v1.MessageCreationVOMock;
 import br.com.hd.unittests.mocks.chat.message.v1.MessageMock;
 import br.com.hd.unittests.mocks.chat.message.v1.MessageUpdateVOMock;
+import br.com.hd.unittests.mocks.chat.message.v1.RoomMssgMock;
+import br.com.hd.unittests.mocks.chat.message.v1.UserMssgMock;
 import br.com.hd.util.service.v1.ServiceUtil;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -108,8 +110,8 @@ public class MessageServiceTest {
 		
 		MessageVO mockVO = MessageMock.vo();
 		
-		when(util.roomExists(data.getRoomKey())).thenReturn(true);
-		when(util.userPresentInRoom(currentUser.getId(), data.getRoomKey())).thenReturn(true);
+		when(util.returnRoomIfExists(data.getRoomKey())).thenReturn(RoomMssgMock.entity());
+		when(util.returnUserIfPresentInRoom(currentUser.getId(), data.getRoomKey())).thenReturn(UserMssgMock.entity());
 		when(repository.save(any(Message.class))).thenReturn(persistedEntity);
 		when(mapper.toVO(persistedEntity)).thenReturn(mockVO);
 		

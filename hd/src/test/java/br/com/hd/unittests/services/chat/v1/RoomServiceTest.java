@@ -87,9 +87,11 @@ public class RoomServiceTest {
 	@Test
 	void testCreateByCustomer() {
 		
-		Long customerKey = 1L;
+		User currentUser = UserMock.entity();
 		
-		Long sectorKey = 1L;
+		Long customerKey = 0L;
+		
+		Long sectorKey = 0L;
 		
 		RoomCreationVO data = new RoomCreationVO();
 		data.setCustomerKey(customerKey);
@@ -109,13 +111,12 @@ public class RoomServiceTest {
 		mockVO.setSector(SectorRoomMock.entity(sectorKey));
 		mockVO.setStatus(RoomStatus.Open);
 		
-		
-		when(util.customerExists(customerKey)).thenReturn(true);
-		when(util.sectorExists(sectorKey)).thenReturn(true);
+		when(util.returnCustomerIfExists(customerKey)).thenReturn(UserRoomMock.entity());
+		when(util.returnSectorIfExists(sectorKey)).thenReturn(SectorRoomMock.entity());
 		when(repository.save(any(Room.class))).thenReturn(updatedEntity);
 		when(mapper.toVO(updatedEntity)).thenReturn(mockVO);
 		
-		RoomVO createdRoom = service.createByCustomer(data);
+		RoomVO createdRoom = service.createByCustomer(currentUser, data);
 		
 		assertNotNull(createdRoom);
 		
@@ -127,9 +128,9 @@ public class RoomServiceTest {
 		assertNull(createdRoom.getSolution());
 		assertEquals(new Date(0), createdRoom.getCreateDatetime());
 		assertEquals(new Date(0), createdRoom.getCloseDatetime());
-		assertEquals("Username1", createdRoom.getCustomer().getUsername());
+		assertEquals("Username0", createdRoom.getCustomer().getUsername());
 		assertNull(createdRoom.getEmployee());
-		assertEquals("Description1", createdRoom.getSector().getDescription());
+		assertEquals("Description0", createdRoom.getSector().getDescription());
 		assertEquals("Content0", createdRoom.getMessages().get(0).getContent());
 		
 		assertTrue(createdRoom.toString().contains("</v1/room/0>;rel=\"self\""));
@@ -142,7 +143,7 @@ public class RoomServiceTest {
 		
 		Long customerKey = 1L;
 		
-		Long sectorKey = 1L;
+		Long sectorKey = 0L;
 		
 		RoomCreationVO data = new RoomCreationVO();
 		data.setCustomerKey(customerKey);
@@ -158,8 +159,8 @@ public class RoomServiceTest {
 		mockVO.setCustomer(UserRoomMock.entity(customerKey));
 		mockVO.setSector(SectorRoomMock.entity(sectorKey));
 		
-		when(util.customerExists(customerKey)).thenReturn(true);
-		when(util.sectorExists(sectorKey)).thenReturn(true);
+		when(util.returnCustomerIfExists(customerKey)).thenReturn(UserRoomMock.entity(1L));
+		when(util.returnSectorIfExists(sectorKey)).thenReturn(SectorRoomMock.entity());
 		when(repository.save(any(Room.class))).thenReturn(updatedEntity);
 		when(mapper.toVO(updatedEntity)).thenReturn(mockVO);
 		
@@ -176,19 +177,19 @@ public class RoomServiceTest {
 		assertEquals(new Date(0), createdRoom.getCreateDatetime());
 		assertEquals(new Date(0), createdRoom.getCloseDatetime());
 		assertEquals("Username1", createdRoom.getCustomer().getUsername());
-		assertEquals("Username2", createdRoom.getEmployee().getUsername());
-		assertEquals("Description1", createdRoom.getSector().getDescription());
+		assertEquals("Username0", createdRoom.getEmployee().getUsername());
+		assertEquals("Description0", createdRoom.getSector().getDescription());
 		assertEquals("Content0", createdRoom.getMessages().get(0).getContent());
 		
 		assertTrue(createdRoom.toString().contains("</v1/room/0>;rel=\"self\""));
 	}
 	
 	@Test
-	void testCreateByEmployeeWithInvalidArgumentsException() {
+	void testCreateByEmployee_WithInvalidArgumentsException() {
 		
 		User currentUser = UserMock.entity();
 		
-		Long customerKey = 1L;
+		Long customerKey = 0L;
 		
 		Long sectorKey = 1L;
 		
